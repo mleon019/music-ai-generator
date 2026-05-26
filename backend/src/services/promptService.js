@@ -9,24 +9,32 @@ function readText(filePath) {
   return fs.readFileSync(filePath, "utf8").trim();
 }
 
-function loadPromptAssets() {
+function loadPromptAssets(timeSignature) {
   if (cachedAssets) {
     return cachedAssets;
   }
 
   const dir = config.paths.promptDir;
 
+  let user1, assistant1, user2, assistant2;
+  if (timeSignature === "3/4") {
+    user1 = readText(path.join(dir, "user1_34.md"));
+    assistant1 = readText(path.join(dir, "example1_34.musicxml"));
+    user2 = readText(path.join(dir, "user2_34.md"));
+    assistant2 = readText(path.join(dir, "example2_34.musicxml"));
+  } 
+  else {
+    user1 = readText(path.join(dir, "user1_44.md"));
+    assistant1 = readText(path.join(dir, "example1_44.musicxml"));
+    user2 = readText(path.join(dir, "user2_44.md"));
+    assistant2 = readText(path.join(dir, "example2_44.musicxml"));
+  }
+
   const assets = {
     system: readText(path.join(dir, "system_prompt.md")),
     examples: [
-      {
-        user: readText(path.join(dir, "example1.user.md")),
-        assistant: readText(path.join(dir, "example1.assistant.musicxml"))
-      },
-      {
-        user: readText(path.join(dir, "example2.user.md")),
-        assistant: readText(path.join(dir, "example2.assistant.musicxml"))
-      }
+      { user: user1, assistant: assistant1 },
+      { user: user2, assistant: assistant2 }
     ]
   };
 
@@ -44,7 +52,7 @@ function buildMessages(config) {
     throw new Error("Config is required to build the prompt");
   }
 
-  const assets = loadPromptAssets();
+  const assets = loadPromptAssets(config.timeSignature);
   const messages = [];
 
   for (const example of assets.examples) {

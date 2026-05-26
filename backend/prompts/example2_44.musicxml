@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1">
+      <part-name>Piano</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <!-- Measure 1: C5 + A4 + G4 + quarter rest -->
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+        <key>
+          <fifths>0</fifths>
+          <mode>major</mode>
+        </key>
+        <time>
+          <beats>4</beats>
+          <beat-type>4</beat-type>
+        </time>
+        <clef>
+          <sign>G</sign>
+          <line>2</line>
+        </clef>
+      </attributes>
+      <!-- Quarter note C5 (Do high) -->
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
+      <!-- Quarter note A4 (La) -->
+      <note>
+        <pitch>
+          <step>A</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
+      <!-- Quarter note G4 (Sol) -->
+      <note>
+        <pitch>
+          <step>G</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
+      <!-- Quarter rest -->
+      <note>
+        <rest/>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
+    </measure>
+
+    <!-- Measure 2: D4 + F4 + G4 + quarter rest -->
+    <measure number="2">
+      <!-- Quarter note D4 (Re) -->
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
+      <!-- Quarter note F4 (Fa) -->
+      <note>
+        <pitch>
+          <step>F</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
+      <!-- Quarter note G4 (Sol) -->
+      <note>
+        <pitch>
+          <step>G</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
+      <!-- Quarter rest -->
+      <note>
+        <rest/>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
+      <barline location="right">
+        <bar-style>light-heavy</bar-style>
+      </barline>
+    </measure>
+  </part>
+</score-partwise>
