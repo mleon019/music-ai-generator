@@ -7,6 +7,9 @@ dotenv.config({ path: envPath });
 function requireEnv(name) {
   const value = process.env[name];
   if (!value) {
+    if (process.env.NODE_ENV === 'test') {
+      return 'test-key-placeholder';
+    }
     throw new Error(`Missing required env var: ${name}`);
   }
   return value;
