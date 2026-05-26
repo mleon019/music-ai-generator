@@ -10,5 +10,11 @@
   },
   "plugins": [
     "jest"
-  ]
+  ],
+  "rules": {
+    "no-unused-vars": ["error", {
+      "argsIgnorePattern": "^_|next$",
+      "varsIgnorePattern": "^_"
+    }]
+  }
 }
