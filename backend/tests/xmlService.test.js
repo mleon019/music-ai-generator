@@ -31,9 +31,34 @@ const validXml = `<?xml version="1.0" encoding="UTF-8"?>
         <duration>1</duration>
         <type>quarter</type>
       </note>
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <type>quarter</type>
+      </note>
     </measure>
   </part>
-</score-partwise>`;
+</score-partwise>
+`;
 
 const invalidXml = "<score-partwise version=\"4.0\"></score-partwise>";
 
