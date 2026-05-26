@@ -24,7 +24,7 @@ const config = {
     apiKey: requireEnv("GROQ_API_KEY"),
     models: groqModels,
     temperature: Number.parseFloat(process.env.GROQ_TEMPERATURE || "0.2"),
-    maxTokens: Number.parseInt(process.env.GROQ_MAX_TOKENS || "2048", 10),
+    top_p: Number.parseFloat(process.env.GROQ_TOP_P || "0.9"),
     maxRetries: Number.parseInt(process.env.GROQ_MAX_RETRIES || "2", 10)
   },
   paths: {
