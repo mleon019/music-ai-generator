@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generate a Score</title>
+    <link rel="stylesheet" href="/src/css/style.css" />
+  </head>
+  <body class="page-form">
+    <header class="topbar">
+      <a class="brand" href="/index.html">Music AI Generator</a>
+      <nav class="topbar-actions">
+        <a class="link" href="/score.html">Latest score</a>
+      </nav>
+    </header>
+
+    <main class="page-shell">
+      <section class="intro reveal">
+        <h1>Set the score</h1>
+        <p>Pick the tempo, time signature, instrument, and measures to shape the MusicXML output.</p>
+      </section>
+
+      <section class="panel reveal delay-1">
+        <div id="form-root"></div>
+        <p id="status-message" class="status"></p>
+      </section>
+    </main>
+
+    <script type="module" src="/src/js/form.js"></script>
+  </body>
+</html>

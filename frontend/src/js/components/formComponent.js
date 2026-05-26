@@ -61,6 +61,7 @@ export function createConfigForm({ onSubmit }) {
 
   const submitButton = document.createElement("button");
   submitButton.type = "submit";
+  submitButton.className = "button primary";
   submitButton.textContent = "Generate";
 
   actions.appendChild(submitButton);

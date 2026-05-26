@@ -3,10 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MusicXML Generator</title>
+    <title>Music AI Generator</title>
+    <link rel="stylesheet" href="/src/css/style.css" />
   </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
+  <body class="page-landing">
+    <main class="hero">
+      <div class="hero-content reveal">
+        <p class="eyebrow">Music AI Generator</p>
+        <h1>Compose short scores from a handful of inputs.</h1>
+        <p class="lead">Choose tempo, time signature, and instrument. We will craft MusicXML ready to render.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="/form.html">Start generating</a>
+          <a class="button ghost" href="/score.html" data-last-score>View last score</a>
+        </div>
+      </div>
+      <div class="hero-card reveal delay-1">
+        <h2>Workflow</h2>
+        <ul class="feature-list">
+          <li><span class="badge">1</span> Set the score parameters.</li>
+          <li><span class="badge">2</span> Generate MusicXML instantly.</li>
+          <li><span class="badge">3</span> Render and review the output.</li>
+        </ul>
+        <p class="hero-note">Your latest score stays in this browser. No sign-in needed.</p>
+      </div>
+    </main>
+    <script type="module" src="/src/js/landing.js"></script>
   </body>
 </html>

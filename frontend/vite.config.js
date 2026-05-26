@@ -1,4 +1,8 @@
+import { resolve } from "path";
 import { defineConfig } from "vite";
+import { fileURLToPath } from "url";
+
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 export default defineConfig({
   server: {
@@ -8,5 +12,14 @@ export default defineConfig({
   preview: {
     host: true,
     port: 4173
+  },
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, "index.html"),
+        form: resolve(__dirname, "form.html"),
+        score: resolve(__dirname, "score.html")
+      }
+    }
   }
 });

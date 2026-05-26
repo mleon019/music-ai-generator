@@ -1,0 +1,19 @@
+@media (max-width: 720px) {
+  .hero {
+    padding-top: 48px;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-actions {
+    justify-content: stretch;
+  }
+
+  button,
+  .button {
+    width: 100%;
+  }
+}
