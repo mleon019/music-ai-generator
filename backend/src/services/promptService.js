@@ -27,15 +27,23 @@ function loadPromptAssets() {
         user: readText(path.join(dir, "example2.user.md")),
         assistant: readText(path.join(dir, "example2.assistant.musicxml"))
       }
-    ],
-    finalUser: readText(path.join(dir, "final.user.md"))
+    ]
   };
 
   cachedAssets = assets;
   return assets;
 }
 
-function buildMessages() {
+function buildFinalUserPrompt(config) {
+    const finalUserPrompt = `Compose a ${config.instrument} piece in ${config.timeSignature} time, ${config.measures} measures long, at ${config.tempo} BPM.`;
+    return finalUserPrompt;
+}
+
+function buildMessages(config) {
+  if (!config) {
+    throw new Error("Config is required to build the prompt");
+  }
+
   const assets = loadPromptAssets();
   const messages = [];
 
@@ -44,7 +52,8 @@ function buildMessages() {
     messages.push({ role: "assistant", content: example.assistant });
   }
 
-  messages.push({ role: "user", content: assets.finalUser });
+  const finalUserPrompt = buildFinalUserPrompt(config);
+  messages.push({ role: "user", content: finalUserPrompt });
 
   return {
     system: assets.system,

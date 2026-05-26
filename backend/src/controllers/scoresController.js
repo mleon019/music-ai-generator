@@ -3,12 +3,7 @@ const { generateMusicXml } = require("../services/groqService");
 const { validateMusicXml } = require("../services/xmlService");
 
 async function generateScore(req, res, next) {
-  if (req.body && Object.prototype.hasOwnProperty.call(req.body, "config")) {
-    const payloadConfig = req.body.config;
-    if (!payloadConfig || typeof payloadConfig !== "object" || Array.isArray(payloadConfig)) {
-      return res.status(400).json({ error: "config must be an object" });
-    }
-  }
+  const promptConfig = req.validatedConfig;
 
   const maxAttempts = config.groq.maxRetries + 1;
 
@@ -16,7 +11,7 @@ async function generateScore(req, res, next) {
     const model = config.groq.models[attempt % config.groq.models.length];
 
     try {
-      const { xml } = await generateMusicXml({ model });
+      const { xml } = await generateMusicXml({ model, config: promptConfig });
       const validation = validateMusicXml(xml);
 
       if (validation.valid) {

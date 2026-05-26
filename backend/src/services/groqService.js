@@ -41,8 +41,8 @@ function normalizeGroqError(error) {
   return normalized;
 }
 
-async function generateMusicXml({ model }) {
-  const { system, messages } = buildMessages();
+async function generateMusicXml({ model, config: promptConfig }) {
+  const { system, messages } = buildMessages(promptConfig);
 
   try {
     const response = await client.chat.completions.create({

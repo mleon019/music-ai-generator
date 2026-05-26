@@ -20,6 +20,7 @@ const groqModels = (process.env.GROQ_MODELS || "groq/compound-mini,groq/compound
 
 const config = {
   port,
+  corsOrigin: process.env.CORS_ORIGIN || "http://localhost:4173",
   groq: {
     apiKey: requireEnv("GROQ_API_KEY"),
     models: groqModels,
