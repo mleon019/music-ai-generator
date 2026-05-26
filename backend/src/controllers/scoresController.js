@@ -17,7 +17,7 @@ async function generateScore(req, res, next) {
 
     try {
       const { xml } = await generateMusicXml({ model });
-      const validation = await validateMusicXml(xml);
+      const validation = validateMusicXml(xml);
 
       if (validation.valid) {
         return res.status(200).json({ musicxml: xml });

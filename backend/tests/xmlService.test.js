@@ -63,14 +63,14 @@ const validXml = `<?xml version="1.0" encoding="UTF-8"?>
 const invalidXml = "<score-partwise version=\"4.0\"></score-partwise>";
 
 describe("validateMusicXml", () => {
-  it("returns valid for a correct MusicXML document", async () => {
-    const result = await validateMusicXml(validXml);
+  it("returns valid for a correct MusicXML document", () => {
+    const result = validateMusicXml(validXml);
     expect(result.valid).toBe(true);
     expect(result.errors).toHaveLength(0);
   });
 
-  it("returns invalid for malformed or incomplete XML", async () => {
-    const result = await validateMusicXml(invalidXml);
+  it("returns invalid for malformed or incomplete XML", () => {
+    const result = validateMusicXml(invalidXml);
     expect(result.valid).toBe(false);
     expect(result.errors.length).toBeGreaterThan(0);
   });

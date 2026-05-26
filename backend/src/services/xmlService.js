@@ -1,45 +1,47 @@
 const fs = require("fs");
 const path = require('path');
-const os = require('os');
-const { execSync } = require("child_process");
+const { pathToFileURL } = require("url");
+const libxmljs = require("libxmljs2");
 
 const config = require("../config");
 
 const xsdPath = config.paths.musicXmlXsd;
 
-async function validateMusicXml(xmlString) {
-const xmlPath = path.join(os.tmpdir(), `mxml-${Date.now()}.xml`);
-  fs.writeFileSync(xmlPath, xmlString, "utf8");
-  try {
-    const output = execSync(
-      `python C:/TFG/pruebas/schema_validator.py "${xmlPath}" "${xsdPath}"`
-    ).toString();
+function rewriteSchemaLocations(xsdText, xsdFilePath) {
+    const xsdDir = path.dirname(xsdFilePath);
 
-    const lines = output.split("\n");
+    return xsdText.replace(/schemaLocation="([^"]+)"/g, (match, location) => {
+        if (!/^https?:\/\//i.test(location)) return match;
 
-    const errors = lines
-      .filter(l => l.trim().startsWith("validation errors:") || l.trim().startsWith("-") || l.includes("Error"))
-      .concat(
-        lines.filter(l => l.trim().startsWith("  "))
-      )
-      .map(l => l.trim())
-      .filter(Boolean);
+        const localCandidate = path.join(xsdDir, path.basename(location));
 
-    return {
-      valid: output.includes("Validation succeeded."),
-      errors,
-    };
+        if (!fs.existsSync(localCandidate)) return match;
 
-  } catch (err) {
-    return {
-      valid: false,
-      errors: (err.stdout?.toString() || err.message).split("\n"),
-    };
-  } finally {
-    fs.existsSync(xmlPath) && fs.unlinkSync(xmlPath);
-  }
+        const fileUrl = pathToFileURL(localCandidate).href;
+        return `schemaLocation="${fileUrl}"`;
+    });
 }
 
+function validateMusicXml(xmlString) {
+    try {
+        const xmlDoc = libxmljs.parseXml(xmlString);
+
+        let xsdString = fs.readFileSync(xsdPath, "utf8");
+        xsdString = rewriteSchemaLocations(xsdString, xsdPath);
+        const xsdDoc = libxmljs.parseXml(xsdString);
+
+        const valid = xmlDoc.validate(xsdDoc);
+        const errors = valid
+            ? []
+            : xmlDoc.validationErrors.map((error) => error.message.trim());
+
+        return { valid, errors };
+    } catch (error) {
+        return { valid: false, errors: [error.message] };
+    }
+}
+
+
 module.exports = {
-  validateMusicXml
+    validateMusicXml
 };
