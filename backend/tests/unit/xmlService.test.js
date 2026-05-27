@@ -1,4 +1,4 @@
-const { validateMusicXml } = require("../src/services/xmlService");
+const { validateMusicXml } = require("../../src/services/xmlService");
 
 const validXml = `<?xml version="1.0" encoding="UTF-8"?>
 <score-partwise version="4.0">

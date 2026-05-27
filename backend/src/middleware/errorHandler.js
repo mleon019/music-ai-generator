@@ -3,7 +3,9 @@ function errorHandler(err, req, res, next) {
   const message = status >= 500 ? "Internal server error" : err.message || "Request failed";
 
   if (status >= 500) {
-    console.error(err);
+    if (process.env.NODE_ENV !== 'test') {
+      console.error(err);
+    }
   }
 
   res.status(status).json({ error: message });
