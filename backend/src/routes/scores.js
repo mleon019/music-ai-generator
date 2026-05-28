@@ -1,10 +1,12 @@
 const express = require("express");
 
-const { generateScore } = require("../controllers/scoresController");
+const { generateScore, listScores } = require("../controllers/scoresController");
+const { optionalAuth, requireAuth } = require("../middleware/auth");
 const validateScoreConfig = require("../middleware/validateScoreConfig");
 
 const router = express.Router();
 
-router.post("/generate", validateScoreConfig, generateScore);
+router.post("/generate", optionalAuth, validateScoreConfig, generateScore);
+router.get("/", requireAuth, listScores);
 
 module.exports = router;

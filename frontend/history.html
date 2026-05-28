@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your History</title>
+    <link rel="stylesheet" href="/src/css/style.css" />
+  </head>
+  <body class="page-history">
+    <header class="topbar">
+      <a class="brand" href="/index.html">Music AI Generator</a>
+      <nav class="topbar-actions">
+        <a class="link" href="/form.html">Generate</a>
+        <button class="button ghost" type="button" data-logout>Logout</button>
+      </nav>
+    </header>
+
+    <main class="page-shell">
+      <section class="intro reveal">
+        <h1>Hi, <span data-user-name></span></h1>
+        <p>Your saved scores appear below. Click any item to view it.</p>
+      </section>
+
+      <section class="panel reveal delay-1">
+        <div class="history-header">
+          <h2>Saved scores</h2>
+          <a class="link" href="/form.html">Create another</a>
+        </div>
+        <p class="status" data-status></p>
+        <div class="history-list" data-history-list></div>
+      </section>
+    </main>
+
+    <script type="module" src="/src/js/history.js"></script>
+  </body>
+</html>

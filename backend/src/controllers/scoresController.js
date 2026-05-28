@@ -1,7 +1,12 @@
 const config = require("../config");
+const pool = require("../db/pool");
 const { generateMusicXml } = require("../services/groqService");
 const { validateMusicXml } = require("../services/xmlService");
 const { getBestModesForConfig } = require("../services/modelSelector");
+
+function buildTitle(promptConfig) {
+    return `${promptConfig.instrument} in ${promptConfig.timeSignature} (${promptConfig.tempo} BPM)`;
+}
 
 async function generateScore(req, res, next) {
     const promptConfig = req.validatedConfig;
@@ -17,6 +22,14 @@ async function generateScore(req, res, next) {
             const validation = validateMusicXml(xml);
 
             if (validation.valid) {
+                if (req.user) {
+                    const title = buildTitle(promptConfig);
+                    await pool.query(
+                        "INSERT INTO scores (user_id, title, config, musicxml) VALUES ($1, $2, $3, $4)",
+                        [req.user.id, title, JSON.stringify(promptConfig), xml]
+                    );
+                }
+
                 return res.status(200).json({ musicxml: xml });
             }
 
@@ -33,6 +46,20 @@ async function generateScore(req, res, next) {
     return res.status(422).json({ error: "MusicXML failed validation" });
 }
 
+async function listScores(req, res, next) {
+    try {
+        const result = await pool.query(
+            "SELECT id, title, config, musicxml, created_at FROM scores WHERE user_id = $1 ORDER BY created_at DESC",
+            [req.user.id]
+        );
+
+        return res.status(200).json({ scores: result.rows });
+    } catch (error) {
+        return next(error);
+    }
+}
+
 module.exports = {
-    generateScore
+    generateScore,
+    listScores
 };

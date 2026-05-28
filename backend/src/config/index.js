@@ -24,12 +24,19 @@ const groqModels = (process.env.GROQ_MODELS || "groq/compound-mini,groq/compound
 const config = {
   port,
   corsOrigin: process.env.CORS_ORIGIN || "http://localhost:4173",
+  databaseUrl: requireEnv("DATABASE_URL"),
+  databaseSsl: process.env.DB_SSL === "true",
   groq: {
     apiKey: requireEnv("GROQ_API_KEY"),
     models: groqModels,
     temperature: Number.parseFloat(process.env.GROQ_TEMPERATURE || "0.2"),
     top_p: Number.parseFloat(process.env.GROQ_TOP_P || "0.9"),
     maxRetries: Number.parseInt(process.env.GROQ_MAX_RETRIES || "2", 10)
+  },
+  auth: {
+    jwtSecret: requireEnv("JWT_SECRET"),
+    jwtExpiresIn: process.env.JWT_EXPIRES_IN || "24h",
+    bcryptRounds: Number.parseInt(process.env.BCRYPT_ROUNDS || "12", 10)
   },
   paths: {
     promptDir: path.resolve(__dirname, "..", "..", "prompts"),

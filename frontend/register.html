@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create account</title>
+    <link rel="stylesheet" href="/src/css/style.css" />
+  </head>
+  <body class="page-auth">
+    <header class="topbar">
+      <a class="brand" href="/index.html">Music AI Generator</a>
+      <nav class="topbar-actions">
+        <a class="link" href="/login.html">Login</a>
+      </nav>
+    </header>
+
+    <main class="page-shell">
+      <section class="intro reveal">
+        <h1>Create your account</h1>
+        <p>Register to save scores and access your personal library.</p>
+      </section>
+
+      <section class="panel auth-panel reveal delay-1">
+        <form class="auth-form" data-auth-form>
+          <label class="field">
+            Name
+            <input type="text" name="name" required />
+          </label>
+          <label class="field">
+            Email
+            <input type="email" name="email" required />
+          </label>
+          <label class="field">
+            Password
+            <input type="password" name="password" minlength="6" required />
+          </label>
+          <div class="form-actions">
+            <button type="submit" class="button primary">Create account</button>
+          </div>
+          <p class="status" data-status></p>
+        </form>
+      </section>
+    </main>
+
+    <script type="module" src="/src/js/register.js"></script>
+  </body>
+</html>

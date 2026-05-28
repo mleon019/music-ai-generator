@@ -18,7 +18,10 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, "index.html"),
         form: resolve(__dirname, "form.html"),
-        score: resolve(__dirname, "score.html")
+        score: resolve(__dirname, "score.html"),
+        login: resolve(__dirname, "login.html"),
+        register: resolve(__dirname, "register.html"),
+        history: resolve(__dirname, "history.html")
       }
     }
   }

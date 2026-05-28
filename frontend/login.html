@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="/src/css/style.css" />
+  </head>
+  <body class="page-auth">
+    <header class="topbar">
+      <a class="brand" href="/index.html">Music AI Generator</a>
+      <nav class="topbar-actions">
+        <a class="link" href="/register.html">Create account</a>
+      </nav>
+    </header>
+
+    <main class="page-shell">
+      <section class="intro reveal">
+        <h1>Welcome back</h1>
+        <p>Sign in to access your saved scores and history.</p>
+      </section>
+
+      <section class="panel auth-panel reveal delay-1">
+        <form class="auth-form" data-auth-form>
+          <label class="field">
+            Email
+            <input type="email" name="email" required />
+          </label>
+          <label class="field">
+            Password
+            <input type="password" name="password" minlength="6" required />
+          </label>
+          <div class="form-actions">
+            <button type="submit" class="button primary">Login</button>
+          </div>
+          <p class="status" data-status></p>
+        </form>
+      </section>
+    </main>
+
+    <script type="module" src="/src/js/login.js"></script>
+  </body>
+</html>
