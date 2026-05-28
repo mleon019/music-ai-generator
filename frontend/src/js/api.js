@@ -73,6 +73,13 @@ export function generateScore(config) {
   });
 }
 
+export function regenerateScore(config, id) {
+  return request("/api/scores/regenerate", {
+    method: "POST",
+    body: JSON.stringify({ config, id })
+  });
+}
+
 export function registerUser(payload) {
   return request("/api/auth/register", {
     method: "POST",
