@@ -1,4 +1,4 @@
-const { scoreMgmt } = require("../services/scoreMgmt");
+const scoreMgmt = require("../services/scoreMgmt");
 
 async function generateScore(req, res, next) {
     try {
