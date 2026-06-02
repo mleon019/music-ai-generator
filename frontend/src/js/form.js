@@ -1,5 +1,6 @@
 import { generateScore } from "./api";
 import { createConfigForm } from "./components/formComponent";
+import { setCurrentScoreState } from "./scoreState";
 
 document.documentElement.classList.add("js-ready");
 
@@ -36,8 +37,11 @@ async function handleSubmit(config) {
       throw new Error("No MusicXML returned from the server.");
     }
 
-    localStorage.setItem("musicxml", result.musicxml);
-    localStorage.setItem("scoreConfig", JSON.stringify(config));
+    setCurrentScoreState({
+      musicxml: result.musicxml,
+      config,
+      scoreId: result.id || null
+    });
     window.location.assign("/score.html");
   } catch (error) {
     formControls.setError(error?.message || "Failed to generate score.");

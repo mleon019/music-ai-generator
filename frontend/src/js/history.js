@@ -1,4 +1,5 @@
 import { clearAuthToken, fetchScores, getAuthUser, getAuthToken } from "./api";
+import { setCurrentScoreState } from "./scoreState";
 
 document.documentElement.classList.add("js-ready");
 
@@ -6,6 +7,7 @@ const list = document.querySelector("[data-history-list]");
 const status = document.querySelector("[data-status]");
 const logoutButton = document.querySelector("[data-logout]");
 const userName = document.querySelector("[data-user-name]");
+let renderedScores = [];
 
 const authUser = getAuthUser();
 if (userName) {
@@ -37,6 +39,7 @@ async function loadScores() {
     setStatus("Loading your scores...");
     const result = await fetchScores();
     const scores = result?.scores || [];
+    renderedScores = scores;
 
     if (scores.length === 0) {
       list.innerHTML = "<p class=\"empty-state\">No saved scores yet.</p>";
@@ -44,16 +47,26 @@ async function loadScores() {
       return;
     }
 
-    list.innerHTML = scores.map(renderScore).join("");
+    list.innerHTML = scores.map((score, index) => renderScore(score, index)).join("");
     setStatus("");
 
     list.querySelectorAll("[data-view-score]").forEach((button) => {
       button.addEventListener("click", () => {
-        const xml = button.getAttribute("data-musicxml");
-        if (xml) {
-          localStorage.setItem("musicxml", xml);
-          window.location.assign("/score.html");
+        const scoreIndex = Number(button.getAttribute("data-score-index"));
+        const score = renderedScores[scoreIndex];
+
+        if (!score?.musicxml || !score?.config) {
+          setStatus("Unable to open selected score.");
+          return;
         }
+
+        setCurrentScoreState({
+          musicxml: score.musicxml,
+          config: score.config,
+          scoreId: score.id || null
+        });
+
+        window.location.assign("/score.html");
       });
     });
   } catch (error) {
@@ -67,7 +80,7 @@ async function loadScores() {
   }
 }
 
-function renderScore(score) {
+function renderScore(score, index) {
   const createdAt = score.created_at
     ? new Date(score.created_at).toLocaleString()
     : "";
@@ -85,7 +98,12 @@ function renderScore(score) {
           <span class="pill">${escapeHtml(String(config.measures || "-") + " measures")}</span>
         </div>
       </div>
-      <button class="button ghost" data-view-score data-musicxml="${escapeHtml(score.musicxml || "")}">View</button>
+      <button
+        class="button ghost"
+        data-view-score
+        data-score-index="${index}">
+        View
+      </button>
     </article>
   `;
 }
