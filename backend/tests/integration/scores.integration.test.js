@@ -111,7 +111,7 @@ describe("POST /api/scores/generate", () => {
   });
 
   it("returns 502 for non-retryable errors", async () => {
-    const error = Object.assign(new Error("Boom"), { status: 500 });
+    const error = Object.assign(new Error("This test should return error"), { status: 500 });
     generateMusicXml.mockRejectedValueOnce(error);
 
     const response = await request(app)
@@ -147,12 +147,10 @@ describe("POST /api/scores/regenerate", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.musicxml).toBe(sampleXml);
-    // anonymous regenerate should not expose an id
     expect(response.body.id).toBeFalsy();
   });
 
   it("updates existing score when authenticated", async () => {
-    // register user
     const email = `maria+${randomUUID()}@example.com`;
     const registerResponse = await request(app)
       .post("/api/auth/register")
@@ -160,7 +158,6 @@ describe("POST /api/scores/regenerate", () => {
 
     const token = registerResponse.body.token;
 
-    // initial generation returns first xml
     generateMusicXml.mockResolvedValueOnce({ xml: sampleXml });
     validateMusicXml.mockReturnValue({ valid: true, errors: [] });
 
@@ -173,7 +170,6 @@ describe("POST /api/scores/regenerate", () => {
     expect(genResp.body.id).toBeTruthy();
     const scoreId = genResp.body.id;
 
-    // prepare regenerate to return a new xml
     generateMusicXml.mockResolvedValueOnce({ xml: newSampleXml });
 
     const regenResp = await request(app)
@@ -185,7 +181,6 @@ describe("POST /api/scores/regenerate", () => {
     expect(regenResp.body.id).toBe(scoreId);
     expect(regenResp.body.musicxml).toBe(newSampleXml);
 
-    // confirm DB was updated
     const historyResp = await request(app)
       .get("/api/scores")
       .set("Authorization", `Bearer ${token}`);

@@ -1,1 +1,1 @@
-Generate a short melody in A minor, 3/4, 2 measures.
+Compose a piano piece in 4/4 time, 2 bars.
