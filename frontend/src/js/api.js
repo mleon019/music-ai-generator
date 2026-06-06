@@ -15,6 +15,10 @@ export function clearAuthToken() {
   localStorage.removeItem(TOKEN_KEY);
 }
 
+export function clearAuthUser() {
+  localStorage.removeItem("authUser");
+}
+
 export function getAuthUser() {
   const raw = localStorage.getItem("authUser");
   if (!raw) {
@@ -96,4 +100,36 @@ export function loginUser(payload) {
 
 export function fetchScores() {
   return request("/api/scores");
+}
+
+export function updateProfile(payload) {
+  return request("/api/auth/profile", {
+    method: "PATCH",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function deleteAccount() {
+  return request("/api/auth/account", {
+    method: "DELETE"
+  });
+}
+
+export function updateScoreTitle(id, title) {
+  return request(`/api/scores/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ title })
+  });
+}
+
+export function deleteScore(id) {
+  return request(`/api/scores/${id}`, {
+    method: "DELETE"
+  });
+}
+
+export function deleteAllScores() {
+  return request("/api/scores", {
+    method: "DELETE"
+  });
 }

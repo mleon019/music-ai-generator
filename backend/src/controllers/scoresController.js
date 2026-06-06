@@ -36,8 +36,40 @@ async function listScores(req, res, next) {
     }
 }
 
+async function updateScoreTitle(req, res, next) {
+    try {
+        const scoreId = req.params.id;
+        const title = req.body?.title;
+        const score = await scoreMgmt.updateScoreTitle(scoreId, req.user.id, title);
+        return res.status(200).json({ score });
+    } catch (error) {
+        return next(error);
+    }
+}
+
+async function deleteScore(req, res, next) {
+    try {
+        await scoreMgmt.deleteScore(req.params.id, req.user.id);
+        return res.sendStatus(204);
+    } catch (error) {
+        return next(error);
+    }
+}
+
+async function deleteAllScores(req, res, next) {
+    try {
+        const deletedCount = await scoreMgmt.deleteAllScores(req.user.id);
+        return res.status(200).json({ deletedCount });
+    } catch (error) {
+        return next(error);
+    }
+}
+
 module.exports = {
     generateScore,
     regenerateScore,
-    listScores
+    listScores,
+    updateScoreTitle,
+    deleteScore,
+    deleteAllScores
 };

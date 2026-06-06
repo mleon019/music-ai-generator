@@ -1,8 +1,10 @@
 import { createScoreViewer } from "./components/scoreViewer";
 import { regenerateScore } from "./api";
+import { renderAuthNavigation } from "./authNav";
 import { getCurrentScoreState, setCurrentScoreState } from "./scoreState";
 
 document.documentElement.classList.add("js-ready");
+renderAuthNavigation();
 
 const scoreRoot = document.getElementById("score-root");
 const status = document.getElementById("score-status");

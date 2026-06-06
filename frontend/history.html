@@ -9,10 +9,7 @@
   <body class="page-history">
     <header class="topbar">
       <a class="brand" href="/index.html">Music AI Generator</a>
-      <nav class="topbar-actions">
-        <a class="link" href="/form.html">Generate</a>
-        <button class="button ghost" type="button" data-logout>Logout</button>
-      </nav>
+      <nav class="topbar-actions" data-auth-nav></nav>
     </header>
 
     <main class="page-shell">
@@ -24,7 +21,10 @@
       <section class="panel reveal delay-1">
         <div class="history-header">
           <h2>Saved scores</h2>
-          <a class="link" href="/form.html">Create another</a>
+          <div class="history-actions">
+            <button class="button ghost" type="button" data-delete-all-scores>Delete all scores</button>
+            <a class="link" href="/form.html">Create another</a>
+          </div>
         </div>
         <p class="status" data-status></p>
         <div class="history-list" data-history-list></div>

@@ -21,7 +21,8 @@ export default defineConfig({
         score: resolve(__dirname, "score.html"),
         login: resolve(__dirname, "login.html"),
         register: resolve(__dirname, "register.html"),
-        history: resolve(__dirname, "history.html")
+        history: resolve(__dirname, "history.html"),
+        profile: resolve(__dirname, "profile.html")
       }
     }
   }

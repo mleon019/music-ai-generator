@@ -1,6 +1,9 @@
 import { registerUser, setAuthToken, setAuthUser } from "./api";
+import { renderAuthNavigation } from "./authNav";
 
 document.documentElement.classList.add("js-ready");
+
+renderAuthNavigation();
 
 const form = document.querySelector("[data-auth-form]");
 const status = document.querySelector("[data-status]");

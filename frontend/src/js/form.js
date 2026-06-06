@@ -1,8 +1,10 @@
 import { generateScore } from "./api";
+import { renderAuthNavigation } from "./authNav";
 import { createConfigForm } from "./components/formComponent";
 import { setCurrentScoreState } from "./scoreState";
 
 document.documentElement.classList.add("js-ready");
+renderAuthNavigation();
 
 const formRoot = document.getElementById("form-root");
 const status = document.getElementById("status-message");

@@ -11,8 +11,6 @@ function buildTitle(promptConfig) {
         `${instrument} ${timeSignature} • ${tempo} BPM`,
         `${instrument} en ${timeSignature} (${tempo} BPM)`,
         `${instrument} ${timeSignature} ${tempo} BPM`,
-        `Composición para ${instrument} • ${tempo} BPM`,
-        `Pieza de ${instrument} en ${timeSignature} a ${tempo} BPM`,
     ];
     const creativeTemplates = [
         `${instrument} del Atardecer`,
@@ -23,9 +21,8 @@ function buildTitle(promptConfig) {
     ];
 
     if (measures < 3) {
-        return `Motivo de ${descriptiveTemplates[Math.floor(Math.random() * descriptiveTemplates.length-2)]}`;
-    }
-    else if (Math.random() < 0.35) {
+        return `Motivo de ${descriptiveTemplates[Math.floor(Math.random() * descriptiveTemplates.length)]}`;
+    } else if (Math.random() < 0.35) {
         return creativeTemplates[Math.floor(Math.random() * creativeTemplates.length)];
     }
     return descriptiveTemplates[Math.floor(Math.random() * descriptiveTemplates.length)];
@@ -123,8 +120,61 @@ async function getUserScores(userId) {
     return result.rows;
 }
 
+async function updateScoreTitle(scoreId, userId, title) {
+    const normalizedTitle = typeof title === "string" ? title.trim() : "";
+
+    if (!normalizedTitle) {
+        const error = new Error("title is required");
+        error.status = 400;
+        throw error;
+    }
+
+    const result = await pool.query(
+        `UPDATE scores
+         SET title = $1
+         WHERE id = $2 AND user_id = $3
+         RETURNING id, title, config, musicxml, created_at`,
+        [normalizedTitle, scoreId, userId]
+    );
+
+    if (result.rowCount === 0) {
+        const error = new Error("Score not found or not owned by user");
+        error.status = 404;
+        throw error;
+    }
+
+    return result.rows[0];
+}
+
+async function deleteScore(scoreId, userId) {
+    const result = await pool.query(
+        "DELETE FROM scores WHERE id = $1 AND user_id = $2 RETURNING id",
+        [scoreId, userId]
+    );
+
+    if (result.rowCount === 0) {
+        const error = new Error("Score not found or not owned by user");
+        error.status = 404;
+        throw error;
+    }
+
+    return result.rowCount;
+}
+
+async function deleteAllScores(userId) {
+    const result = await pool.query(
+        "DELETE FROM scores WHERE user_id = $1",
+        [userId]
+    );
+
+    return result.rowCount;
+}
+
 module.exports = {
     generateScore,
     regenerateScore,
-    getUserScores
+    getUserScores,
+    updateScoreTitle,
+    deleteScore,
+    deleteAllScores
 }

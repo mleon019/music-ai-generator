@@ -65,6 +65,26 @@
   color: var(--muted);
 }
 
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+.link-button {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  color: var(--muted);
+  font: inherit;
+}
+
 .panel {
   background: var(--card);
   border: 1px solid var(--border);
@@ -200,6 +220,13 @@ button:disabled {
   margin-bottom: 16px;
 }
 
+.history-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .history-list {
   display: grid;
   gap: 16px;
@@ -232,6 +259,17 @@ button:disabled {
   gap: 8px;
 }
 
+.score-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.score-actions .button {
+  white-space: nowrap;
+}
+
 .pill {
   padding: 4px 10px;
   border-radius: 999px;
@@ -244,4 +282,31 @@ button:disabled {
 .empty-state {
   margin: 0;
   color: var(--muted);
+}
+
+.profile-panel {
+  gap: 20px;
+}
+
+.profile-summary {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(42, 83, 212, 0.05);
+}
+
+.profile-email {
+  margin: 0;
+  font-weight: 700;
+}
+
+.profile-actions {
+  justify-content: space-between;
+}
+
+.danger {
+  color: #9a1f2b;
+  border-color: rgba(154, 31, 43, 0.3) !important;
 }
