@@ -79,10 +79,6 @@ if (form) {
 
 if (deleteButton) {
   deleteButton.addEventListener("click", async () => {
-    const confirmed = window.confirm("Delete your account and all saved scores? This cannot be undone.");
-    if (!confirmed) {
-      return;
-    }
 
     try {
       setStatus("Deleting account...");

@@ -32,7 +32,6 @@ function startInlineEdit(scoreItem, score) {
   if (!titleH3) return;
 
   const currentTitle = score.title || "Untitled";
-  const originalHTML = titleH3.outerHTML;
 
   const editContainer = document.createElement("div");
   editContainer.className = "title-edit";
