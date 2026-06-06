@@ -310,3 +310,23 @@ button:disabled {
   color: #9a1f2b;
   border-color: rgba(154, 31, 43, 0.3) !important;
 }
+
+.title-edit {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.title-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 6px 10px;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.title-edit-actions {
+  display: flex;
+  gap: 6px;
+}
