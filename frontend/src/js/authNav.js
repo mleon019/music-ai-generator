@@ -23,37 +23,37 @@ export function renderAuthNavigation() {
 function renderLoggedNavigation(mode, user) {
   if (mode === "hero") {
     return `
-      <a class="link" href="/history.html">History</a>
-      <a class="link icon-link" href="/profile.html" aria-label="Profile">
+      <a class="link" href="/history.html">Historial</a>
+      <a class="link icon-link" href="/profile.html" aria-label="Mi perfil">
         ${PROFILE_ICON}
-        <span>${escapeHtml(user?.name || "Profile")}</span>
+        <span>${escapeHtml(user?.name || "Mi perfil")}</span>
       </a>
-      <button class="link link-button" type="button" data-logout>Logout</button>
+      <button class="link link-button" type="button" data-logout>Cerrar sesión</button>
     `;
   }
 
   return `
-    <a class="link" href="/form.html">Generate</a>
-    <a class="link" href="/history.html">History</a>
-    <a class="link icon-link" href="/profile.html" aria-label="Profile">
+    <a class="link" href="/form.html">Generar partituras</a>
+    <a class="link" href="/history.html">Historial</a>
+    <a class="link icon-link" href="/profile.html" aria-label="Mi perfil">
       ${PROFILE_ICON}
-      <span>Profile</span>
+      <span>Mi perfil</span>
     </a>
-    <button class="button ghost" type="button" data-logout>Logout</button>
+    <button class="button ghost" type="button" data-logout>Cerrar sesión</button>
   `;
 }
 
 function renderGuestNavigation(mode) {
   if (mode === "hero") {
     return `
-      <a class="link" href="/login.html">Login</a>
-      <a class="link" href="/register.html">Create account</a>
+      <a class="link" href="/login.html">Iniciar sesión</a>
+      <a class="link" href="/register.html">Crear cuenta</a>
     `;
   }
 
   return `
-    <a class="link" href="/login.html">Login</a>
-    <a class="link" href="/register.html">Create account</a>
+    <a class="link" href="/login.html">Iniciar sesión</a>
+    <a class="link" href="/register.html">Crear cuenta</a>
   `;
 }
 

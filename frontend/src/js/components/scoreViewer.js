@@ -6,7 +6,7 @@ export function createScoreViewer() {
 
   const container = document.createElement("div");
   container.className = "score-canvas";
-  container.textContent = "No score generated yet.";
+  container.textContent = "No hay ninguna partitura aún.";
 
   wrapper.appendChild(container);
 

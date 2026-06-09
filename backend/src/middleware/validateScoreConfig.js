@@ -1,5 +1,5 @@
 const ALLOWED_TIME_SIGNATURES = new Set(["3/4", "4/4"]);
-const ALLOWED_INSTRUMENTS = new Set(["Piano", "Guitar", "Violin", "Flute", "Trumpet"]);
+const ALLOWED_INSTRUMENTS = new Set(["Piano", "Violín", "Flauta", "Trompeta"]);
 
 function normalizeString(value) {
   if (typeof value !== "string") {

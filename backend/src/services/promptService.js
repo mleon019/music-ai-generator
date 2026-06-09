@@ -42,8 +42,19 @@ function loadPromptAssets(timeSignature) {
   return assets;
 }
 
+function instrumentTraductions(instrument) {
+    const traductions = {
+        "Piano": "Piano",
+        "Pandereta": "Tambourine",
+        "Violín": "Violin",
+        "Flauta": "Flute",
+        "Trompeta": "Trumpet"
+    };
+    return traductions[instrument] || instrument;
+}
+
 function buildFinalUserPrompt(config) {
-    const finalUserPrompt = `Compose a ${config.instrument} piece in ${config.timeSignature} time, ${config.measures} measures long, at ${config.tempo} BPM.`;
+    const finalUserPrompt = `Compose a ${instrumentTraductions(config.instrument)} piece in ${config.timeSignature} time, ${config.measures} measures long, at ${config.tempo} BPM.`;
     return finalUserPrompt;
 }
 

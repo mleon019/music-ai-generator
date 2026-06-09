@@ -20,13 +20,13 @@ if (form) {
     };
 
     try {
-      setStatus("Signing in...");
+      setStatus("Iniciando sesión...");
       const result = await loginUser(payload);
       setAuthToken(result.token);
       setAuthUser(result.user);
       window.location.assign("/history.html");
     } catch (error) {
-      setStatus(error?.message || "Login failed.");
+      setStatus(error?.message || "No se pudo iniciar sesión. Inténtalo de nuevo más tarde.");
     }
   });
 }

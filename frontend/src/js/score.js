@@ -11,7 +11,7 @@ const status = document.getElementById("score-status");
 const regenerateButton = document.getElementById("regenerate-button");
 
 if (!scoreRoot) {
-  throw new Error("Score root element is missing.");
+  throw new Error("Hubo un problema con la partitura. Inténtalo de nuevo más tarde.");
 }
 
 const scoreViewer = createScoreViewer();
@@ -25,20 +25,20 @@ if (regenerateButton) {
   regenerateButton.disabled = !scoreState?.config;
 
   if (!scoreState?.config) {
-    regenerateButton.title = "Generate or open a score first to enable regeneration.";
+    regenerateButton.title = "Genera o abre una partitura existente primero para regenerarla.";
   }
 }
 
 if (!musicxml) {
-  setStatus("No score loaded. Generate one or open one from history.");
+  setStatus("No se pudo cargar ninguna partitura. Genera una nueva o abre una desde tu historial.");
 } else {
   scoreViewer
     .renderMusicXml(musicxml)
     .then(() => {
-      setStatus("MusicXML rendered successfully.");
+      setStatus("Partitura generada correctamente.");
     })
     .catch((error) => {
-      setStatus(error?.message || "Failed to render the score.");
+      setStatus(error?.message || "No se pudo visualizar la partitura. Inténtalo de nuevo más tarde.");
     });
 }
 
@@ -48,7 +48,7 @@ async function handleRegenerate() {
   const scoreId = scoreState?.scoreId || null;
 
   if (!config) {
-    setStatus("No score configuration found for the current score.");
+    setStatus("No se pudo encontrar la configuración utilizada en esta partitura.");
     return;
   }
 
@@ -56,7 +56,7 @@ async function handleRegenerate() {
     regenerateButton.disabled = true;
   }
 
-  setStatus("Regenerating score...");
+  setStatus("Regenerando partitura...");
 
   try {
     const result = await regenerateScore(config, scoreId);
@@ -73,9 +73,9 @@ async function handleRegenerate() {
     setCurrentScoreState(scoreState);
 
     await scoreViewer.renderMusicXml(result.musicxml);
-    setStatus("Score regenerated successfully.");
+    setStatus("Partitura generada correctamente.");
   } catch (error) {
-    setStatus(error?.message || "Failed to regenerate the score.");
+    setStatus(error?.message || "No se pudo generar la partitura. Inténtalo de nuevo más tarde.");
   } finally {
     if (regenerateButton) {
       regenerateButton.disabled = false;

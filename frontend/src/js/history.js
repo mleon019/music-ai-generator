@@ -38,8 +38,8 @@ function startInlineEdit(scoreItem, score) {
   editContainer.innerHTML = `
     <input type="text" class="title-input" value="${escapeHtml(currentTitle)}" maxlength="100">
     <div class="title-edit-actions">
-      <button class="button small" type="button" data-action="save-title">Save</button>
-      <button class="button small ghost" type="button" data-action="cancel-title">Cancel</button>
+      <button class="button small" type="button" data-action="save-title">Guardar</button>
+      <button class="button small ghost" type="button" data-action="cancel-title">Cancelar</button>
     </div>
   `;
 
@@ -63,16 +63,16 @@ function startInlineEdit(scoreItem, score) {
   const saveTitle = async () => {
     const newTitle = input.value.trim();
     if (!newTitle) {
-      alert("El título no puede estar vacío");
+      restoreOriginal();
       return;
     }
 
     try {
-      setStatus("Updating title...");
+      setStatus("Actualizando el título...");
       await updateScoreTitle(score.id, newTitle);
       await loadScores();
     } catch (error) {
-      setStatus(error?.message || "Failed to update title.");
+      setStatus(error?.message || "No se pudo cambiar el título de esta partitura. Inténtalo de nuevo más tarde.");
       restoreOriginal();
     }
   };
@@ -120,13 +120,13 @@ function renderScore(score, index) {
           <span class="pill">${escapeHtml(config.instrument || "-")}</span>
           <span class="pill">${escapeHtml(config.timeSignature || "-")}</span>
           <span class="pill">${escapeHtml(String(config.tempo || "-") + " BPM")}</span>
-          <span class="pill">${escapeHtml(String(config.measures || "-") + " measures")}</span>
+          <span class="pill">${escapeHtml(String(config.measures || "-") + " compases")}</span>
         </div>
       </div>
       <div class="score-actions">
-        <button class="button ghost" type="button" data-score-action="view">View</button>
-        <button class="button ghost" type="button" data-score-action="edit-title">Edit title</button>
-        <button class="button ghost" type="button" data-score-action="delete">Delete</button>
+        <button class="button ghost" type="button" data-score-action="view">Visualizar partitura</button>
+        <button class="button ghost" type="button" data-score-action="edit-title">Editar título</button>
+        <button class="button ghost" type="button" data-score-action="delete">Eliminar</button>
       </div>
     </article>
   `;
@@ -134,11 +134,11 @@ function renderScore(score, index) {
 
 async function handleDeleteAllScores() {
   try {
-    setStatus("Deleting all scores...");
+    setStatus("Eliminando todas las partituras...");
     await deleteAllScores();
     await loadScores();
   } catch (error) {
-    setStatus(error?.message || "Failed to delete scores.");
+    setStatus(error?.message || "No se pudo eliminar las partituras. Inténtalo de nuevo más tarde.");
   }
 }
 
@@ -147,7 +147,7 @@ async function loadScores() {
 
   if (!getAuthToken()) {
     if (deleteAllButton) deleteAllButton.hidden = true;
-    list.innerHTML = "<p class=\"empty-state\">Please log in to view your history.</p>";
+    list.innerHTML = "<p class=\"empty-state\">Inicia sesión para ver tu historial.</p>";
     setStatus("");
     return;
   }
@@ -155,13 +155,13 @@ async function loadScores() {
   if (deleteAllButton) deleteAllButton.hidden = false;
 
   try {
-    setStatus("Loading your scores...");
+    setStatus("Cargando tus partituras...");
     const result = await fetchScores();
     const scores = result?.scores || [];
     renderedScores = scores;
 
     if (scores.length === 0) {
-      list.innerHTML = "<p class=\"empty-state\">No saved scores yet.</p>";
+      list.innerHTML = "<p class=\"empty-state\">Aún no has generado partituras.</p>";
       setStatus("");
       return;
     }
@@ -170,9 +170,9 @@ async function loadScores() {
     setStatus("");
   } catch (error) {
     if (error?.status === 401) {
-      list.innerHTML = "<p class=\"empty-state\">Session expired. Please log in again.</p>";
+      list.innerHTML = "<p class=\"empty-state\">Tu sesión ha expirado. Por favor, inicia sesión de nuevo.</p>";
     } else {
-      setStatus(error?.message || "Failed to load scores.");
+      setStatus(error?.message || "No se pudo cargar las partituras. Inténtalo de nuevo más tarde.");
     }
   }
 }
@@ -190,7 +190,7 @@ list?.addEventListener("click", async (event) => {
   const score = renderedScores[scoreIndex];
 
   if (!scoreId || !score) {
-    setStatus("Unable to open selected score.");
+    setStatus("No se pudo abrir la partitura seleccionada. Inténtalo de nuevo más tarde.");
     return;
   }
 
@@ -198,7 +198,7 @@ list?.addEventListener("click", async (event) => {
 
   if (action === "view") {
     if (!score.musicxml || !score.config) {
-      setStatus("Unable to open selected score.");
+      setStatus("No se pudo abrir la partitura seleccionada. Inténtalo de nuevo más tarde.");
       return;
     }
 
@@ -219,11 +219,11 @@ list?.addEventListener("click", async (event) => {
 
   if (action === "delete") {
     try {
-      setStatus("Deleting score...");
+      setStatus("Eliminando partitura...");
       await deleteScore(scoreId);
       await loadScores();
     } catch (error) {
-      setStatus(error?.message || "Failed to delete score.");
+      setStatus(error?.message || "No se pudo eliminar la partitura seleccionada. Inténtalo de nuevo más tarde.");
     }
   }
 });

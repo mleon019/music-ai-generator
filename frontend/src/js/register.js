@@ -21,13 +21,13 @@ if (form) {
     };
 
     try {
-      setStatus("Creating your account...");
+      setStatus("Creando cuenta...");
       const result = await registerUser(payload);
       setAuthToken(result.token);
       setAuthUser(result.user);
       window.location.assign("/history.html");
     } catch (error) {
-      setStatus(error?.message || "Registration failed.");
+      setStatus(error?.message || "No se pudo completar el registro. Inténtalo de nuevo más tarde.");
     }
   });
 }

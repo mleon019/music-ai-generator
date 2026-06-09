@@ -3,43 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile</title>
+    <title>Mi Perfil</title>
     <link rel="stylesheet" href="/src/css/style.css" />
   </head>
   <body class="page-auth page-profile">
     <header class="topbar">
-      <a class="brand" href="/index.html">Music AI Generator</a>
+      <a class="brand" href="/index.html">Generador de partituras con IA</a>
       <nav class="topbar-actions" data-auth-nav></nav>
     </header>
 
     <main class="page-shell">
       <section class="intro reveal">
-        <h1>Your profile</h1>
-        <p>Update your display name or password, or delete your account when you are done.</p>
+        <h1>Mi perfil</h1>
+        <p>Modifica tus datos personales cuando sea necesario.</p>
       </section>
 
       <section class="panel auth-panel profile-panel reveal delay-1">
         <div class="profile-summary">
-          <p class="eyebrow">Signed in as</p>
+          <p class="eyebrow">Sesión iniciada como</p>
           <p class="profile-email" data-profile-email></p>
         </div>
 
         <form class="auth-form" data-profile-form>
           <label class="field">
-            Name
+            Nombre
             <input type="text" name="name" required />
           </label>
           <label class="field">
-            Current password
+            Contraseña actual
             <input type="password" name="currentPassword" minlength="6" />
           </label>
           <label class="field">
-            New password
+            Nueva contraseña
             <input type="password" name="newPassword" minlength="6" />
           </label>
           <div class="form-actions profile-actions">
-            <button type="submit" class="button primary">Save changes</button>
-            <button type="button" class="button ghost danger" data-delete-account>Delete account</button>
+            <button type="submit" class="button primary">Guardar cambios</button>
+            <button type="button" class="button ghost danger" data-delete-account>Eliminar cuenta</button>
           </div>
           <p class="status" data-status></p>
         </form>

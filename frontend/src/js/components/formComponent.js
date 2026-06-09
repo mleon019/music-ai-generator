@@ -1,5 +1,5 @@
 const ALLOWED_TIME_SIGNATURES = ["4/4", "3/4"];
-const ALLOWED_INSTRUMENTS = ["Piano", "Guitar", "Violin", "Flute", "Trumpet"];
+const ALLOWED_INSTRUMENTS = ["Piano", "Violín", "Flauta", "Trompeta"];
 
 function createField(labelText, input) {
   const field = document.createElement("div");
@@ -48,10 +48,10 @@ export function createConfigForm({ onSubmit }) {
   measuresInput.max = "16";
   measuresInput.value = "4";
 
-  grid.appendChild(createField("Time signature", timeSignatureSelect));
+  grid.appendChild(createField("Indicador de compás", timeSignatureSelect));
   grid.appendChild(createField("Tempo (BPM)", tempoInput));
-  grid.appendChild(createField("Instrument", instrumentSelect));
-  grid.appendChild(createField("Measures", measuresInput));
+  grid.appendChild(createField("Instrumento", instrumentSelect));
+  grid.appendChild(createField("Nº de compases", measuresInput));
 
   const error = document.createElement("p");
   error.className = "form-error";
@@ -83,19 +83,19 @@ export function createConfigForm({ onSubmit }) {
     const errors = [];
 
     if (!ALLOWED_TIME_SIGNATURES.includes(config.timeSignature)) {
-      errors.push("Choose a valid time signature.");
+      errors.push("Selecciona un indicador de compás válido.");
     }
 
     if (!Number.isFinite(config.tempo) || config.tempo < 40 || config.tempo > 168) {
-      errors.push("Tempo must be between 40 and 168.");
+      errors.push("El tempo debe estar entre 40 y 168 BPM.");
     }
 
     if (!ALLOWED_INSTRUMENTS.includes(config.instrument)) {
-      errors.push("Choose a supported instrument.");
+      errors.push("Seleciona un instrumento aceptado.");
     }
 
     if (!Number.isFinite(config.measures) || config.measures < 1 || config.measures > 16) {
-      errors.push("Measures must be between 1 and 16.");
+      errors.push("El número de compases debe estar entre 1 y 16.");
     }
 
     if (errors.length > 0) {
@@ -108,7 +108,7 @@ export function createConfigForm({ onSubmit }) {
 
   function setLoading(isLoading) {
     submitButton.disabled = isLoading;
-    submitButton.textContent = isLoading ? "Generating..." : "Generate";
+    submitButton.textContent = isLoading ? "Generando..." : "Generar";
   }
 
   function setError(message) {

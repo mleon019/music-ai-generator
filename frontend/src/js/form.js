@@ -29,7 +29,7 @@ function setStatus(message) {
 }
 
 async function handleSubmit(config) {
-  setStatus("Generating MusicXML...");
+  setStatus("Generando partitura...");
   formControls.setError("");
   formControls.setLoading(true);
 
@@ -46,7 +46,7 @@ async function handleSubmit(config) {
     });
     window.location.assign("/score.html");
   } catch (error) {
-    formControls.setError(error?.message || "Failed to generate score.");
+    formControls.setError(error?.message || "No se pudo generar la partitura. Inténtalo de nuevo más tarde.");
     setStatus("");
   } finally {
     formControls.setLoading(false);
