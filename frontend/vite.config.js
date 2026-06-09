@@ -28,8 +28,11 @@ function cleanUrlMiddleware(req, res, next) {
   if (!req.url) {
     return next();
   }
-
-  const requestUrl = new URL(req.url, "http://localhost");
+  
+  const protocol = req.headers['x-forwarded-proto'] || (req.headers.host?.includes('localhost') ? 'http' : 'https');
+  
+  const base = `${protocol}://${req.headers.host || 'localhost'}`;
+  const requestUrl = new URL(req.url, base);
   const pathname = requestUrl.pathname;
 
   if (legacyRedirects[pathname]) {

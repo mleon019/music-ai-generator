@@ -2,7 +2,7 @@ const config = require("../config");
 const { generateMusicXml } = require("./groqService");
 const { validateMusicXml } = require("./xmlService");
 const { getBestModesForConfig } = require("./modelSelector");
-const pool = require("../db/pool");
+const scoreRepository = require("../repository/scoreRepository");
 
 function buildTitle(promptConfig) {
     const { instrument, tempo, timeSignature, measures } = promptConfig;
@@ -68,14 +68,14 @@ async function generateScore(promptConfig, user = null) {
     }
 
     const title = buildTitle(promptConfig);
-    const result = await pool.query(
-        `INSERT INTO scores (user_id, title, config, musicxml, created_at)
-         VALUES ($1, $2, $3, $4, now()) 
-         RETURNING id`,
-        [user.id, title, JSON.stringify(promptConfig), xml]
+    const score = await scoreRepository.createScore(
+        user.id,
+        title,
+        promptConfig,
+        xml
     );
 
-    return { musicxml: xml, id: result.rows[0].id };
+    return { musicxml: xml, id: score.id };
 }
 
 async function regenerateScore(promptConfig, scoreId, user) {
@@ -88,12 +88,13 @@ async function regenerateScore(promptConfig, scoreId, user) {
         throw error;
     }
 
-    const existingScore = await pool.query(
-        "SELECT id FROM scores WHERE id = $1 AND user_id = $2",
-        [scoreId, user.id]
+    const score = await scoreRepository.findByIdAndUser(
+        scoreId,
+        user.id
     );
-    if (existingScore.rowCount === 0) {
-        const error = new Error("Score not found or not owned by user");
+
+    if (!score) {
+        const error = new Error("Score not found");
         error.status = 404;
         throw error;
     }
@@ -105,19 +106,24 @@ async function regenerateScore(promptConfig, scoreId, user) {
         throw error;
     }
     
-    await pool.query(
-        "UPDATE scores SET musicxml = $1, config = $2, created_at = now() WHERE id = $3 AND user_id = $4 RETURNING id",
-        [xml, JSON.stringify(promptConfig), scoreId, user.id]
+    await scoreRepository.updateScore(
+        scoreId,
+        user.id,
+        xml,
+        promptConfig
     );
     return { musicxml: xml, id: scoreId };
 }
 
 async function getUserScores(userId) {
-    const result = await pool.query(
-        "SELECT id, title, config, musicxml, created_at FROM scores WHERE user_id = $1 ORDER BY created_at DESC",
-            [userId]
-        );
-    return result.rows;
+    const scores = await scoreRepository.findAllByUser(userId);
+    return scores.map(score => ({
+        id: score.id,
+        title: score.title,
+        config: score.config,
+        musicxml: score.musicxml,
+        createdAt: score.created_at
+    }));
 }
 
 async function updateScoreTitle(scoreId, userId, title) {
@@ -129,45 +135,30 @@ async function updateScoreTitle(scoreId, userId, title) {
         throw error;
     }
 
-    const result = await pool.query(
-        `UPDATE scores
-         SET title = $1
-         WHERE id = $2 AND user_id = $3
-         RETURNING id, title, config, musicxml, created_at`,
-        [normalizedTitle, scoreId, userId]
-    );
-
-    if (result.rowCount === 0) {
+    const score = await scoreRepository.updateTitle(scoreId, userId, normalizedTitle);
+    if (!score) {
         const error = new Error("Score not found or not owned by user");
         error.status = 404;
         throw error;
     }
 
-    return result.rows[0];
+    return score;
 }
 
 async function deleteScore(scoreId, userId) {
-    const result = await pool.query(
-        "DELETE FROM scores WHERE id = $1 AND user_id = $2 RETURNING id",
-        [scoreId, userId]
-    );
-
-    if (result.rowCount === 0) {
+    const score = await scoreRepository.deleteById(scoreId, userId);
+    if (!score) {
         const error = new Error("Score not found or not owned by user");
         error.status = 404;
         throw error;
     }
 
-    return result.rowCount;
+    return score;
 }
 
 async function deleteAllScores(userId) {
-    const result = await pool.query(
-        "DELETE FROM scores WHERE user_id = $1",
-        [userId]
-    );
-
-    return result.rowCount;
+    const result = await scoreRepository.deleteAllByUser(userId);
+    return result;
 }
 
 module.exports = {

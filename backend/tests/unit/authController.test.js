@@ -1,110 +1,290 @@
 process.env.NODE_ENV = "test";
-process.env.JWT_SECRET = "test-secret";
 
-jest.mock("../../src/db/pool", () => ({
-  query: jest.fn()
+jest.mock("../../src/services/authService", () => ({
+  register: jest.fn(),
+  login: jest.fn(),
+  updateProfile: jest.fn(),
+  deleteAccount: jest.fn()
 }));
 
-jest.mock("bcryptjs", () => ({
-  hash: jest.fn(),
-  compare: jest.fn()
-}));
+const authService = require("../../src/services/authService");
 
-jest.mock("jsonwebtoken", () => ({
-  sign: jest.fn()
-}));
-
-const pool = require("../../src/db/pool");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { login, register } = require("../../src/controllers/authController");
+const {
+  register,
+  login,
+  updateProfile,
+  deleteAccount
+} = require("../../src/controllers/authController");
 
 function createRes() {
   return {
     status: jest.fn().mockReturnThis(),
-    json: jest.fn()
+    json: jest.fn(),
+    sendStatus: jest.fn()
   };
 }
 
 describe("authController", () => {
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("registers a new user", async () => {
-    bcrypt.hash.mockResolvedValue("hashed");
-    pool.query.mockResolvedValue({
-      rows: [{ id: "id", email: "a@b.com", name: "Ana" }]
-    });
-    jwt.sign.mockReturnValue("token");
+  describe("register", () => {
 
-    const req = {
-      body: { email: "a@b.com", name: "Ana", password: "secret123" }
-    };
-    const res = createRes();
-    const next = jest.fn();
+    it("returns 201 when registration succeeds", async () => {
 
-    await register(req, res, next);
+      authService.register.mockResolvedValue({
+        token: "token",
+        user: {
+          id: "id",
+          email: "a@b.com",
+          name: "Ana"
+        }
+      });
 
-    expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith({
-      token: "token",
-      user: { id: "id", email: "a@b.com", name: "Ana" }
-    });
-  });
+      const req = {
+        body: {
+          email: "a@b.com",
+          name: "Ana",
+          password: "secret123"
+        }
+      };
 
-  it("returns 409 on duplicate email", async () => {
-    const error = new Error("duplicate");
-    error.code = "23505";
-    pool.query.mockRejectedValue(error);
+      const res = createRes();
+      const next = jest.fn();
 
-    const req = {
-      body: { email: "a@b.com", name: "Ana", password: "secret123" }
-    };
-    const res = createRes();
-    const next = jest.fn();
+      await register(req, res, next);
 
-    await register(req, res, next);
-
-    expect(res.status).toHaveBeenCalledWith(409);
-    expect(res.json).toHaveBeenCalledWith({ error: "Email already registered" });
-  });
-
-  it("logs in a user", async () => {
-    pool.query.mockResolvedValue({
-      rows: [{
-        id: "id",
+      expect(authService.register).toHaveBeenCalledWith({
         email: "a@b.com",
         name: "Ana",
-        password_hash: "hashed"
-      }]
+        password: "secret123"
+      });
+
+      expect(res.status).toHaveBeenCalledWith(201);
+
+      expect(res.json).toHaveBeenCalledWith({
+        token: "token",
+        user: {
+          id: "id",
+          email: "a@b.com",
+          name: "Ana"
+        }
+      });
+
+      expect(next).not.toHaveBeenCalled();
     });
-    bcrypt.compare.mockResolvedValue(true);
-    jwt.sign.mockReturnValue("token");
 
-    const req = { body: { email: "a@b.com", password: "secret123" } };
-    const res = createRes();
-    const next = jest.fn();
+    it("returns 400 when required fields are missing", async () => {
 
-    await login(req, res, next);
+      const req = {
+        body: {}
+      };
 
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({
-      token: "token",
-      user: { id: "id", email: "a@b.com", name: "Ana" }
+      const res = createRes();
+      const next = jest.fn();
+
+      await register(req, res, next);
+
+      expect(authService.register).not.toHaveBeenCalled();
+
+      expect(res.status).toHaveBeenCalledWith(400);
+
+      expect(res.json).toHaveBeenCalledWith({
+        error: "name, email, and password are required"
+      });
     });
+
+    it("forwards service errors to next", async () => {
+
+      const error = new Error("Email already registered");
+      error.status = 409;
+
+      authService.register.mockRejectedValue(error);
+
+      const req = {
+        body: {
+          email: "a@b.com",
+          name: "Ana",
+          password: "secret123"
+        }
+      };
+
+      const res = createRes();
+      const next = jest.fn();
+
+      await register(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(error);
+    });
+
   });
 
-  it("rejects invalid credentials", async () => {
-    pool.query.mockResolvedValue({ rows: [] });
+  describe("login", () => {
 
-    const req = { body: { email: "a@b.com", password: "secret123" } };
-    const res = createRes();
-    const next = jest.fn();
+    it("returns 200 when login succeeds", async () => {
 
-    await login(req, res, next);
+      authService.login.mockResolvedValue({
+        token: "token",
+        user: {
+          id: "id",
+          email: "a@b.com",
+          name: "Ana"
+        }
+      });
 
-    expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.json).toHaveBeenCalledWith({ error: "Invalid credentials" });
+      const req = {
+        body: {
+          email: "a@b.com",
+          password: "secret123"
+        }
+      };
+
+      const res = createRes();
+      const next = jest.fn();
+
+      await login(req, res, next);
+
+      expect(authService.login).toHaveBeenCalledWith(
+        "a@b.com",
+        "secret123"
+      );
+
+      expect(res.status).toHaveBeenCalledWith(200);
+    });
+
+    it("returns 400 when credentials are missing", async () => {
+
+      const req = {
+        body: {}
+      };
+
+      const res = createRes();
+      const next = jest.fn();
+
+      await login(req, res, next);
+
+      expect(authService.login).not.toHaveBeenCalled();
+
+      expect(res.status).toHaveBeenCalledWith(400);
+
+      expect(res.json).toHaveBeenCalledWith({
+        error: "email and password are required"
+      });
+    });
+
+    it("forwards service errors", async () => {
+
+      const error = new Error("Invalid credentials");
+      error.status = 401;
+
+      authService.login.mockRejectedValue(error);
+
+      const req = {
+        body: {
+          email: "a@b.com",
+          password: "wrong"
+        }
+      };
+
+      const res = createRes();
+      const next = jest.fn();
+
+      await login(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(error);
+    });
+
   });
+
+  describe("updateProfile", () => {
+
+    it("returns 401 when user is missing", async () => {
+
+      const req = {
+        user: null,
+        body: {}
+      };
+
+      const res = createRes();
+      const next = jest.fn();
+
+      await updateProfile(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(401);
+    });
+
+    it("returns updated user", async () => {
+
+      authService.updateProfile.mockResolvedValue({
+        token: "new-token",
+        user: {
+          id: "id",
+          email: "a@b.com",
+          name: "Nuevo Nombre"
+        }
+      });
+
+      const req = {
+        user: {
+          id: "id"
+        },
+        body: {
+          name: "Nuevo Nombre"
+        }
+      };
+
+      const res = createRes();
+      const next = jest.fn();
+
+      await updateProfile(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+
+      expect(authService.updateProfile).toHaveBeenCalled();
+    });
+
+  });
+
+  describe("deleteAccount", () => {
+
+    it("returns 401 when user is missing", async () => {
+
+      const req = {
+        user: null
+      };
+
+      const res = createRes();
+      const next = jest.fn();
+
+      await deleteAccount(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(401);
+    });
+
+    it("returns 204 when deletion succeeds", async () => {
+
+      authService.deleteAccount.mockResolvedValue();
+
+      const req = {
+        user: {
+          id: "id"
+        }
+      };
+
+      const res = createRes();
+      const next = jest.fn();
+
+      await deleteAccount(req, res, next);
+
+      expect(authService.deleteAccount)
+        .toHaveBeenCalledWith("id");
+
+      expect(res.sendStatus)
+        .toHaveBeenCalledWith(204);
+    });
+
+  });
+
 });
