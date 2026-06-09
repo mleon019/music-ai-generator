@@ -1,5 +1,5 @@
 import { clearAuthToken, clearAuthUser, deleteAccount, getAuthUser, setAuthToken, setAuthUser, updateProfile } from "./api";
-import { renderAuthNavigation } from "./authNav";
+import { renderAuthNavigation } from "./utils/authNav";
 
 document.documentElement.classList.add("js-ready");
 

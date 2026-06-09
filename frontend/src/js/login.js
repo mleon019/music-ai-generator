@@ -1,5 +1,5 @@
 import { loginUser, setAuthToken, setAuthUser } from "./api";
-import { renderAuthNavigation } from "./authNav";
+import { renderAuthNavigation } from "./utils/authNav";
 
 document.documentElement.classList.add("js-ready");
 

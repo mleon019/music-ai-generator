@@ -1,4 +1,4 @@
-import { clearAuthToken, clearAuthUser, getAuthToken, getAuthUser } from "./api";
+import { clearAuthToken, clearAuthUser, getAuthToken, getAuthUser } from "../api";
 
 const PROFILE_ICON = `
   <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">

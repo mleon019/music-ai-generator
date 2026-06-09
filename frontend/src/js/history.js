@@ -1,6 +1,6 @@
 import { deleteAllScores, deleteScore, fetchScores, getAuthToken, getAuthUser, updateScoreTitle } from "./api";
-import { renderAuthNavigation } from "./authNav";
-import { setCurrentScoreState } from "./scoreState";
+import { renderAuthNavigation } from "./utils/authNav";
+import { setCurrentScoreState } from "./utils/scoreState";
 
 document.documentElement.classList.add("js-ready");
 renderAuthNavigation();

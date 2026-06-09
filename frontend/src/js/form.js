@@ -1,7 +1,7 @@
 import { generateScore } from "./api";
-import { renderAuthNavigation } from "./authNav";
+import { renderAuthNavigation } from "./utils/authNav";
 import { createConfigForm } from "./components/formComponent";
-import { setCurrentScoreState } from "./scoreState";
+import { setCurrentScoreState } from "./utils/scoreState";
 
 document.documentElement.classList.add("js-ready");
 renderAuthNavigation();

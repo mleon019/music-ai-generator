@@ -1,7 +1,7 @@
 import { createScoreViewer } from "./components/scoreViewer";
 import { regenerateScore } from "./api";
-import { renderAuthNavigation } from "./authNav";
-import { getCurrentScoreState, setCurrentScoreState } from "./scoreState";
+import { renderAuthNavigation } from "./utils/authNav";
+import { getCurrentScoreState, setCurrentScoreState } from "./utils/scoreState";
 
 document.documentElement.classList.add("js-ready");
 renderAuthNavigation();
