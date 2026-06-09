@@ -1,6 +1,6 @@
 process.env.NODE_ENV = "test";
 
-jest.mock("../../src/repositories/userRepository", () => ({
+jest.mock("../../src/repository/userRepository", () => ({
   createUser: jest.fn(),
   findByEmail: jest.fn(),
   findById: jest.fn(),
@@ -24,7 +24,7 @@ jest.mock("../../src/utils/authUtils", () => ({
 
 const bcrypt = require("bcryptjs");
 
-const userRepository = require("../../src/repositories/userRepository");
+const userRepository = require("../../src/repository/userRepository");
 
 const authUtils = require("../../src/utils/authUtils");
 
