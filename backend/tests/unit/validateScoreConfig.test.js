@@ -40,7 +40,7 @@ describe("validateScoreConfig", () => {
         config: {
           timeSignature: " 3/4 ",
           tempo: 90,
-          instrument: " Violin ",
+          instrument: " Violín ",
           measures: 2
         }
       }
@@ -54,7 +54,7 @@ describe("validateScoreConfig", () => {
     expect(req.validatedConfig).toEqual({
       timeSignature: "3/4",
       tempo: 90,
-      instrument: "Violin",
+      instrument: "Violín",
       measures: 2
     });
   });
