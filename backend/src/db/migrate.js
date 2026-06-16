@@ -35,38 +35,54 @@ async function runMigrations() {
     return;
   }
 
-  const client = await connectWithRetry();
+  const retryAttempts = 5;
 
-  try {
-    await client.query("BEGIN");
-    await client.query(
-      "CREATE TABLE IF NOT EXISTS migrations (id SERIAL PRIMARY KEY, name TEXT UNIQUE NOT NULL, executed_at TIMESTAMPTZ DEFAULT now())"
-    );
+  for (let attempt = 0; attempt < retryAttempts; attempt++) {
+    const client = await connectWithRetry();
 
-    const { rows } = await client.query("SELECT name FROM migrations");
-    const applied = new Set(rows.map((row) => row.name));
+    try {
+      await client.query("BEGIN");
+      await client.query(
+        "CREATE TABLE IF NOT EXISTS migrations (id SERIAL PRIMARY KEY, name TEXT UNIQUE NOT NULL, executed_at TIMESTAMPTZ DEFAULT now())"
+      );
 
-    const files = fs
-      .readdirSync(migrationsDir)
-      .filter((file) => file.endsWith(".sql"))
-      .sort();
+      const { rows } = await client.query("SELECT name FROM migrations");
+      const applied = new Set(rows.map((row) => row.name));
 
-    for (const file of files) {
-      if (applied.has(file)) {
+      const files = fs
+        .readdirSync(migrationsDir)
+        .filter((file) => file.endsWith(".sql"))
+        .sort();
+
+      for (const file of files) {
+        if (applied.has(file)) {
+          continue;
+        }
+
+        const sql = fs.readFileSync(path.join(migrationsDir, file), "utf8");
+        await client.query(sql);
+        await client.query("INSERT INTO migrations (name) VALUES ($1)", [file]);
+      }
+
+      await client.query("COMMIT");
+      client.release();
+
+      return;
+    } catch (error) {
+      await client.query("ROLLBACK");
+      client.release();
+
+      if (
+        attempt < retryAttempts - 1 &&
+        error.message &&
+        error.message.includes("pg_type_typname_nsp_index")
+      ) {
+        await wait(retryDelayMs);
         continue;
       }
 
-      const sql = fs.readFileSync(path.join(migrationsDir, file), "utf8");
-      await client.query(sql);
-      await client.query("INSERT INTO migrations (name) VALUES ($1)", [file]);
+      throw error;
     }
-
-    await client.query("COMMIT");
-  } catch (error) {
-    await client.query("ROLLBACK");
-    throw error;
-  } finally {
-    client.release();
   }
 }
 
