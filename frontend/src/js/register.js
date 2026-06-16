@@ -1,4 +1,4 @@
-import { registerUser, setAuthToken, setAuthUser } from "./api";
+import { registerUser, setAuthUser } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
 
 document.documentElement.classList.add("js-ready");
@@ -23,7 +23,6 @@ if (form) {
     try {
       setStatus("Creando cuenta...");
       const result = await registerUser(payload);
-      setAuthToken(result.token);
       setAuthUser(result.user);
       window.location.assign("/history.html");
     } catch (error) {

@@ -123,6 +123,12 @@ describe("POST /api/scores/generate", () => {
   });
 });
 
+function extractAuthCookie(res) {
+  const cookies = res.headers["set-cookie"];
+  if (!cookies || !cookies[0]) return "";
+  return cookies[0].split(";")[0];
+}
+
 describe("POST /api/scores/regenerate", () => {
   beforeAll(async () => {
     await runMigrations();
@@ -156,14 +162,14 @@ describe("POST /api/scores/regenerate", () => {
       .post("/api/auth/register")
       .send({ name: "Maria", email, password: "secret123" });
 
-    const token = registerResponse.body.token;
+    const cookie = extractAuthCookie(registerResponse);
 
     generateMusicXml.mockResolvedValueOnce({ xml: sampleXml });
     validateMusicXml.mockReturnValue({ valid: true, errors: [] });
 
     const genResp = await request(app)
       .post("/api/scores/generate")
-      .set("Authorization", `Bearer ${token}`)
+      .set("Cookie", cookie)
       .send(validPayload);
 
     expect(genResp.status).toBe(200);
@@ -174,7 +180,7 @@ describe("POST /api/scores/regenerate", () => {
 
     const regenResp = await request(app)
       .post("/api/scores/regenerate")
-      .set("Authorization", `Bearer ${token}`)
+      .set("Cookie", cookie)
       .send({ ...validPayload, id: scoreId });
 
     expect(regenResp.status).toBe(200);
@@ -183,7 +189,7 @@ describe("POST /api/scores/regenerate", () => {
 
     const historyResp = await request(app)
       .get("/api/scores")
-      .set("Authorization", `Bearer ${token}`);
+      .set("Cookie", cookie);
 
     expect(historyResp.status).toBe(200);
     expect(historyResp.body.scores).toHaveLength(1);

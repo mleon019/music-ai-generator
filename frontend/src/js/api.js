@@ -1,18 +1,10 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-const TOKEN_KEY = "authToken";
-
-export function getAuthToken() {
-  return localStorage.getItem(TOKEN_KEY);
-}
-
-export function setAuthToken(token) {
-  if (token) {
-    localStorage.setItem(TOKEN_KEY, token);
-  }
-}
 
 export function clearAuthToken() {
-  localStorage.removeItem(TOKEN_KEY);
+  fetch(`${API_BASE_URL}/api/auth/logout`, {
+    method: "POST",
+    credentials: "include"
+  }).catch(() => {});
 }
 
 export function clearAuthUser() {
@@ -39,11 +31,10 @@ export function setAuthUser(user) {
 }
 
 async function request(path, options = {}) {
-  const token = getAuthToken();
   const response = await fetch(`${API_BASE_URL}${path}`, {
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options.headers || {})
     },
     ...options

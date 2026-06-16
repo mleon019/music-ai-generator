@@ -13,7 +13,7 @@ function createRes() {
 
 describe("auth middleware", () => {
   it("optionalAuth allows requests without token", () => {
-    const req = { headers: {} };
+    const req = { cookies: {} };
     const res = createRes();
     const next = jest.fn();
 
@@ -24,7 +24,7 @@ describe("auth middleware", () => {
   });
 
   it("requireAuth rejects missing token", () => {
-    const req = { headers: {} };
+    const req = { cookies: {} };
     const res = createRes();
     const next = jest.fn();
 
@@ -37,7 +37,7 @@ describe("auth middleware", () => {
 
   it("requireAuth accepts valid token", () => {
     const token = jwt.sign({ id: "user-id" }, process.env.JWT_SECRET);
-    const req = { headers: { authorization: `Bearer ${token}` } };
+    const req = { cookies: { authToken: token } };
     const res = createRes();
     const next = jest.fn();
 

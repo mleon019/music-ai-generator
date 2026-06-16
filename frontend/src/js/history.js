@@ -1,4 +1,4 @@
-import { deleteAllScores, deleteScore, fetchScores, getAuthToken, getAuthUser, updateScoreTitle } from "./api";
+import { deleteAllScores, deleteScore, fetchScores, getAuthUser, updateScoreTitle } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
 import { setCurrentScoreState } from "./utils/scoreState";
 
@@ -12,7 +12,7 @@ const userName = document.querySelector("[data-user-name]");
 let renderedScores = [];
 
 if (deleteAllButton) {
-  deleteAllButton.hidden = !getAuthToken();
+  deleteAllButton.hidden = !getAuthUser();
 }
 
 const authUser = getAuthUser();
@@ -145,7 +145,7 @@ async function handleDeleteAllScores() {
 async function loadScores() {
   if (!list) return;
 
-  if (!getAuthToken()) {
+  if (!getAuthUser()) {
     if (deleteAllButton) deleteAllButton.hidden = true;
     list.innerHTML = "<p class=\"empty-state\">Inicia sesión para ver tu historial.</p>";
     setStatus("");

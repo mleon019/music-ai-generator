@@ -1,4 +1,4 @@
-import { clearAuthToken, clearAuthUser, deleteAccount, getAuthUser, setAuthToken, setAuthUser, updateProfile } from "./api";
+import { clearAuthToken, clearAuthUser, deleteAccount, getAuthUser, setAuthUser, updateProfile } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
 
 document.documentElement.classList.add("js-ready");
@@ -60,7 +60,6 @@ if (form) {
     try {
       setStatus("Guardando cambios en el perfil...");
       const result = await updateProfile(payload);
-      setAuthToken(result.token);
       setAuthUser(result.user);
       renderAuthNavigation();
       if (email) {

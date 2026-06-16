@@ -20,6 +20,7 @@ function createRes() {
   return {
     status: jest.fn().mockReturnThis(),
     json: jest.fn(),
+    cookie: jest.fn(),
     sendStatus: jest.fn()
   };
 }
@@ -64,8 +65,9 @@ describe("authController", () => {
 
       expect(res.status).toHaveBeenCalledWith(201);
 
+      expect(res.cookie).toHaveBeenCalledWith("authToken", "token", expect.any(Object));
+
       expect(res.json).toHaveBeenCalledWith({
-        token: "token",
         user: {
           id: "id",
           email: "a@b.com",

@@ -1,4 +1,4 @@
-import { clearAuthToken, clearAuthUser, getAuthToken, getAuthUser } from "../api";
+import { clearAuthToken, clearAuthUser, getAuthUser } from "../api";
 
 const PROFILE_ICON = `
   <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -7,7 +7,7 @@ const PROFILE_ICON = `
 `;
 
 export function renderAuthNavigation() {
-  const isAuthenticated = Boolean(getAuthToken());
+  const isAuthenticated = Boolean(getAuthUser());
   const user = getAuthUser();
 
   document.querySelectorAll("[data-auth-nav]").forEach((container) => {

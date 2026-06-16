@@ -53,21 +53,27 @@ describe("Scores history integration", () => {
       .post("/api/auth/register")
       .send({ name: "Ana", email, password: "secret123" });
 
-    const token = registerResponse.body.token;
+    const cookie = extractAuthCookie(registerResponse);
 
     const generateResponse = await request(app)
       .post("/api/scores/generate")
-      .set("Authorization", `Bearer ${token}`)
+      .set("Cookie", cookie)
       .send(payload);
 
     expect(generateResponse.status).toBe(200);
 
     const historyResponse = await request(app)
       .get("/api/scores")
-      .set("Authorization", `Bearer ${token}`);
+      .set("Cookie", cookie);
 
     expect(historyResponse.status).toBe(200);
     expect(historyResponse.body.scores).toHaveLength(1);
     expect(historyResponse.body.scores[0].musicxml).toBe(sampleXml);
   });
+
+  function extractAuthCookie(res) {
+    const cookies = res.headers["set-cookie"];
+    if (!cookies || !cookies[0]) return "";
+    return cookies[0].split(";")[0];
+  }
 });

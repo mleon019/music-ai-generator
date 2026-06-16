@@ -3,11 +3,7 @@ const jwt = require("jsonwebtoken");
 const config = require("../config");
 
 function getToken(req) {
-  const header = req.headers.authorization || "";
-  if (!header.startsWith("Bearer ")) {
-    return null;
-  }
-  return header.slice(7).trim();
+  return req.cookies?.authToken || null;
 }
 
 function verifyToken(token) {

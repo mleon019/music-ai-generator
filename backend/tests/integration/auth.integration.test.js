@@ -31,7 +31,9 @@ describe("Auth integration", () => {
       .send({ name: "Ana", email, password: "secret123" });
 
     expect(registerResponse.status).toBe(201);
-    expect(registerResponse.body.token).toBeTruthy();
+    expect(registerResponse.headers["set-cookie"]).toBeDefined();
+    expect(registerResponse.headers["set-cookie"][0]).toContain("authToken=");
+    expect(registerResponse.body.token).toBeUndefined();
     expect(registerResponse.body.user.email).toBe(email);
 
     const loginResponse = await request(app)
@@ -39,7 +41,9 @@ describe("Auth integration", () => {
       .send({ email, password: "secret123" });
 
     expect(loginResponse.status).toBe(200);
-    expect(loginResponse.body.token).toBeTruthy();
+    expect(loginResponse.headers["set-cookie"]).toBeDefined();
+    expect(loginResponse.headers["set-cookie"][0]).toContain("authToken=");
+    expect(loginResponse.body.token).toBeUndefined();
     expect(loginResponse.body.user.name).toBe("Ana");
   });
 });

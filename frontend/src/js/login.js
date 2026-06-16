@@ -1,4 +1,4 @@
-import { loginUser, setAuthToken, setAuthUser } from "./api";
+import { loginUser, setAuthUser } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
 
 document.documentElement.classList.add("js-ready");
@@ -22,7 +22,6 @@ if (form) {
     try {
       setStatus("Iniciando sesión...");
       const result = await loginUser(payload);
-      setAuthToken(result.token);
       setAuthUser(result.user);
       window.location.assign("/history.html");
     } catch (error) {
