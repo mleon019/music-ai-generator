@@ -169,9 +169,7 @@ async function loadScores() {
     list.innerHTML = scores.map((score, index) => renderScore(score, index)).join("");
     setStatus("");
   } catch (error) {
-    if (error?.status === 401) {
-      list.innerHTML = "<p class=\"empty-state\">Tu sesión ha expirado. Por favor, inicia sesión de nuevo.</p>";
-    } else {
+    if (error?.status !== 401) {
       setStatus(error?.message || "No se pudo cargar las partituras. Inténtalo de nuevo más tarde.");
     }
   }

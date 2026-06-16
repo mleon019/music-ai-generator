@@ -52,6 +52,17 @@ async function request(path, options = {}) {
   }
 
   if (!response.ok) {
+    if (response.status === 401) {
+      clearAuthToken();
+      clearAuthUser();
+
+      const path = window.location.pathname;
+      if (!path.startsWith("/login/") && !path.startsWith("/register/")) {
+        window.location.assign("/login/");
+        return;
+      }
+    }
+
     const message = data?.error || "Request failed";
     const error = new Error(message);
     error.status = response.status;
