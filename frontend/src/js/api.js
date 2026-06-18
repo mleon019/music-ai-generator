@@ -135,3 +135,17 @@ export function deleteAllScores() {
     method: "DELETE"
   });
 }
+
+export function requestPasswordReset(email) {
+  return request("/api/auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify({ email })
+  });
+}
+
+export function resetPassword(token, newPassword) {
+  return request("/api/auth/reset-password", {
+    method: "POST",
+    body: JSON.stringify({ token, newPassword })
+  });
+}

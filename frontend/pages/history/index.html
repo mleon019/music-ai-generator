@@ -31,6 +31,17 @@
       </section>
     </main>
 
+    <div class="modal-overlay" data-delete-modal hidden>
+      <div class="modal-panel panel reveal">
+        <h2>Eliminar historial</h2>
+        <p>¿Estás seguro de que quieres eliminar todas tus partituras? Esta acción no se puede deshacer.</p>
+        <div class="form-actions" style="margin-top: 1rem;">
+          <button type="button" class="button ghost" data-delete-cancel>Cancelar</button>
+          <button type="button" class="button danger" data-delete-confirm>Eliminar todo</button>
+        </div>
+      </div>
+    </div>
+
     <script type="module" src="/src/js/history.js"></script>
   </body>
 </html>

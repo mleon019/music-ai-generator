@@ -8,6 +8,9 @@ renderAuthNavigation();
 const list = document.querySelector("[data-history-list]");
 const status = document.querySelector("[data-status]");
 const deleteAllButton = document.querySelector("[data-delete-all-scores]");
+const deleteModal = document.querySelector("[data-delete-modal]");
+const deleteConfirm = document.querySelector("[data-delete-confirm]");
+const deleteCancel = document.querySelector("[data-delete-cancel]");
 const userName = document.querySelector("[data-user-name]");
 let renderedScores = [];
 
@@ -22,8 +25,28 @@ if (userName) {
 
 loadScores();
 
-if (deleteAllButton) {
-  deleteAllButton.addEventListener("click", handleDeleteAllScores);
+if (deleteAllButton && deleteModal) {
+  deleteAllButton.addEventListener("click", () => {
+    deleteModal.hidden = false;
+  });
+}
+
+if (deleteCancel && deleteModal) {
+  deleteCancel.addEventListener("click", () => {
+    deleteModal.hidden = true;
+  });
+}
+
+if (deleteModal) {
+  deleteModal.addEventListener("click", (event) => {
+    if (event.target === deleteModal) {
+      deleteModal.hidden = true;
+    }
+  });
+}
+
+if (deleteConfirm) {
+  deleteConfirm.addEventListener("click", handleDeleteAllScores);
 }
 
 
@@ -133,6 +156,7 @@ function renderScore(score, index) {
 }
 
 async function handleDeleteAllScores() {
+  if (deleteModal) deleteModal.hidden = true;
   try {
     setStatus("Eliminando todas las partituras...");
     await deleteAllScores();

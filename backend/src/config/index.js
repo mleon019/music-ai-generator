@@ -38,6 +38,14 @@ const config = {
     jwtExpiresIn: process.env.JWT_EXPIRES_IN || "24h",
     bcryptRounds: Number.parseInt(process.env.BCRYPT_ROUNDS || "12", 10)
   },
+  frontendUrl: process.env.FRONTEND_URL || "http://localhost:4173",
+  smtp: {
+    host: process.env.SMTP_HOST || "smtp.ethereal.email",
+    port: Number.parseInt(process.env.SMTP_PORT || "587", 10),
+    user: process.env.SMTP_USER || "test",
+    pass: process.env.SMTP_PASS || "test",
+    from: process.env.SMTP_FROM || "noreply@music-generator.app"
+  },
   paths: {
     promptDir: path.resolve(__dirname, "..", "..", "prompts"),
     musicXmlXsd: path.resolve(__dirname, "..", "..", "..", "schema", "musicxml.xsd")

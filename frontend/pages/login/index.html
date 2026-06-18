@@ -31,10 +31,29 @@
           <div class="form-actions">
             <button type="submit" class="button primary">Iniciar sesión</button>
           </div>
+          <p class="auth-alt"><button type="button" class="link link-button" data-forgot-password>¿Olvidaste tu contraseña?</button></p>
           <p class="status" data-status></p>
         </form>
       </section>
     </main>
+
+    <div class="modal-overlay" data-modal hidden>
+      <div class="modal-panel panel reveal">
+        <h2>Restablecer contraseña</h2>
+        <p>Se enviará un enlace a tu correo electrónico para que puedas restablecer tu contraseña.</p>
+        <form class="auth-form" data-forgot-form>
+          <label class="field">
+            Email
+            <input type="email" name="email" data-forgot-email required />
+          </label>
+          <div class="form-actions">
+            <button type="button" class="button ghost" data-modal-close>Cancelar</button>
+            <button type="submit" class="button primary">Enviar enlace</button>
+          </div>
+          <p class="status" data-forgot-status></p>
+        </form>
+      </div>
+    </div>
 
     <script type="module" src="/src/js/login.js"></script>
   </body>

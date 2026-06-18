@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs");
 const config = require("../config");
 const userRepository = require("../repository/userRepository");
+const resetTokenRepository = require("../repository/resetTokenRepository");
+const { sendResetEmail } = require("./emailService");
 const { signToken, buildUserResponse } = require("../utils/authUtils");
 
 async function register({ email, name, password }) {
@@ -106,22 +108,22 @@ async function updateProfile({
 
   if (newPassword !== undefined) {
     if (
-      typeof newPassword !== "string" ||
-      newPassword.length < 6
+      typeof currentPassword !== "string" ||
+      currentPassword.length === 0
     ) {
       const error = new Error(
-        "newPassword must be at least 6 characters"
+        "currentPassword is required to change password"
       );
       error.status = 400;
       throw error;
     }
 
     if (
-      typeof currentPassword !== "string" ||
-      currentPassword.length === 0
+      typeof newPassword !== "string" ||
+      newPassword.length < 6
     ) {
       const error = new Error(
-        "currentPassword is required to change password"
+        "La nueva contraseña debe tener al menos 6 caracteres"
       );
       error.status = 400;
       throw error;
@@ -134,7 +136,7 @@ async function updateProfile({
 
     if (!isValid) {
       const error = new Error(
-        "Invalid current password"
+        "La contraseña actual es incorrecta"
       );
       error.status = 401;
       throw error;
@@ -159,6 +161,43 @@ async function updateProfile({
   };
 }
 
+async function requestPasswordReset(email) {
+  const user = await userRepository.findByEmail(email);
+
+  if (!user) {
+    return { message: "Comprueba tu bandeja de entrada. Se ha enviado un enlace para restablecer tu contraseña." };
+  }
+
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+  const rawToken = await resetTokenRepository.createToken(user.id, expiresAt);
+
+  const resetLink = `${config.frontendUrl}/reset-password/?token=${rawToken}`;
+  await sendResetEmail(email, resetLink);
+
+  return { message: "Comprueba tu bandeja de entrada. Se ha enviado un enlace para restablecer tu contraseña." };
+}
+
+async function resetPassword(token, newPassword) {
+  if (typeof newPassword !== "string" || newPassword.length < 6) {
+    const error = new Error("La contraseña debe tener al menos 6 caracteres");
+    error.status = 400;
+    throw error;
+  }
+
+  const record = await resetTokenRepository.findValidToken(token);
+
+  if (!record) {
+    const error = new Error("El permiso está caducado o es inválido. Inténtalo de nuevo.");
+    error.status = 400;
+    throw error;
+  }
+
+  await resetTokenRepository.markAsUsed(record.id);
+
+  const passwordHash = await bcrypt.hash(newPassword, config.auth.bcryptRounds);
+  await userRepository.updateUser(record.user_id, record.name, passwordHash);
+}
+
 async function deleteAccount(userId) {
   const deleted =
     await userRepository.deleteUser(userId);
@@ -176,5 +215,7 @@ module.exports = {
   register,
   login,
   updateProfile,
-  deleteAccount
+  deleteAccount,
+  requestPasswordReset,
+  resetPassword
 };

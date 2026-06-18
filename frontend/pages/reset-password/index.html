@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Restablecer contraseña</title>
+    <link rel="stylesheet" href="/src/css/style.css" />
+  </head>
+  <body class="page-auth">
+    <header class="topbar">
+      <a class="brand" href="/index.html">Generador de partituras con IA</a>
+      <nav class="topbar-actions" data-auth-nav></nav>
+    </header>
+
+    <main class="page-shell">
+      <section class="intro reveal">
+        <h1>Restablecer contraseña</h1>
+        <p>Introduce tu nueva contraseña.</p>
+      </section>
+
+      <section class="panel auth-panel reveal delay-1">
+        <form class="auth-form" id="reset-form">
+          <label class="field">
+            Nueva contraseña
+            <input type="password" name="newPassword" minlength="6" required />
+          </label>
+          <label class="field">
+            Confirmar contraseña
+            <input type="password" name="confirmPassword" minlength="6" required />
+          </label>
+          <div class="form-actions">
+            <button type="submit" class="button primary">Restablecer contraseña</button>
+          </div>
+          <p class="status" id="reset-status"></p>
+        </form>
+      </section>
+    </main>
+
+    <script type="module" src="/src/js/reset-password.js"></script>
+  </body>
+</html>

@@ -11,7 +11,8 @@ const routeEntries = {
   "/login/": "/pages/login/index.html",
   "/register/": "/pages/register/index.html",
   "/history/": "/pages/history/index.html",
-  "/profile/": "/pages/profile/index.html"
+  "/profile/": "/pages/profile/index.html",
+  "/reset-password/": "/pages/reset-password/index.html"
 };
 
 const legacyRedirects = {
@@ -21,7 +22,8 @@ const legacyRedirects = {
   "/login.html": "/login/",
   "/register.html": "/register/",
   "/history.html": "/history/",
-  "/profile.html": "/profile/"
+  "/profile.html": "/profile/",
+  "/reset-password.html": "/reset-password/"
 };
 
 function cleanUrlMiddleware(req, res, next) {
@@ -92,7 +94,8 @@ export default defineConfig({
         login: resolve(__dirname, "pages/login/index.html"),
         register: resolve(__dirname, "pages/register/index.html"),
         history: resolve(__dirname, "pages/history/index.html"),
-        profile: resolve(__dirname, "pages/profile/index.html")
+        profile: resolve(__dirname, "pages/profile/index.html"),
+        "reset-password": resolve(__dirname, "pages/reset-password/index.html")
       }
     }
   }

@@ -128,10 +128,45 @@ async function logout(req, res) {
   return res.sendStatus(204);
 }
 
+async function requestPasswordReset(req, res, next) {
+  try {
+    const email = normalizeEmail(req.body?.email);
+
+    if (!email) {
+      return res.status(400).json({ error: "Es necesario un email para continuar" });
+    }
+
+    const result = await authService.requestPasswordReset(email);
+
+    return res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function resetPassword(req, res, next) {
+  try {
+    const token = req.body?.token;
+    const newPassword = req.body?.newPassword;
+
+    if (typeof token !== "string" || !token) {
+      return res.status(400).json({ error: "El permiso está caducado. Inténtalo de nuevo." });
+    }
+
+    await authService.resetPassword(token, newPassword);
+
+    return res.status(200).json({ message: "Contraseña actualizada correctamente." });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   register,
   login,
   updateProfile,
   deleteAccount,
-  logout
+  logout,
+  requestPasswordReset,
+  resetPassword
 };
