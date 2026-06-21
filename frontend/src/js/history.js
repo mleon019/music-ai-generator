@@ -1,6 +1,7 @@
-import { deleteAllScores, deleteScore, fetchScores, getAuthUser, updateScoreTitle } from "./api";
+import { deleteAllScores, deleteScore, exportScore, fetchScores, getAuthUser, updateScoreTitle } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
 import { setCurrentScoreState } from "./utils/scoreState";
+import { downloadBlob } from "./utils/downloadFile";
 
 document.documentElement.classList.add("js-ready");
 renderAuthNavigation();
@@ -150,6 +151,14 @@ function renderScore(score, index) {
         <button class="button ghost" type="button" data-score-action="view">Visualizar partitura</button>
         <button class="button ghost" type="button" data-score-action="edit-title">Editar título</button>
         <button class="button ghost" type="button" data-score-action="delete">Eliminar</button>
+        <div class="export-inline" data-export-wrapper="${escapeHtml(score.id || "")}">
+          <button class="button ghost small" type="button" data-score-action="export">Exportar</button>
+          <div class="export-inline-dropdown" hidden data-export-dropdown="${escapeHtml(score.id || "")}">
+            <button type="button" data-export-format="musicxml">.musicxml</button>
+            <button type="button" data-export-format="midi">.midi</button>
+            <button type="button" data-export-format="pdf">.pdf</button>
+          </div>
+        </div>
       </div>
     </article>
   `;
@@ -234,6 +243,15 @@ list?.addEventListener("click", async (event) => {
     return;
   }
 
+  if (action === "export") {
+    const exportWrapper = scoreItem.querySelector(`[data-export-wrapper="${scoreId}"]`);
+    const dropdown = scoreItem.querySelector(`[data-export-dropdown="${scoreId}"]`);
+    if (exportWrapper && dropdown) {
+      dropdown.hidden = !dropdown.hidden;
+    }
+    return;
+  }
+
   if (action === "edit-title") {
     startInlineEdit(scoreItem, score, scoreIndex);
     return;
@@ -247,6 +265,45 @@ list?.addEventListener("click", async (event) => {
     } catch (error) {
       setStatus(error?.message || "No se pudo eliminar la partitura seleccionada. Inténtalo de nuevo más tarde.");
     }
+  }
+});
+
+document.addEventListener("click", (event) => {
+  const wrapper = event.target.closest("[data-export-wrapper]");
+  document.querySelectorAll("[data-export-dropdown]").forEach(dd => {
+    if (!wrapper || !wrapper.contains(event.target)) {
+      dd.hidden = true;
+    }
+  });
+});
+
+list?.addEventListener("click", async (event) => {
+  const formatButton = event.target.closest("[data-export-format]");
+  if (!formatButton) return;
+
+  const scoreItem = formatButton.closest(".score-item");
+  if (!scoreItem) return;
+
+  const scoreId = scoreItem.getAttribute("data-score-id");
+  const scoreIndex = Number(scoreItem.getAttribute("data-score-index"));
+  const score = renderedScores[scoreIndex];
+  const format = formatButton.getAttribute("data-export-format");
+
+  if (!score?.musicxml || !format) {
+    setStatus("No se pudo exportar esta partitura.");
+    return;
+  }
+
+  const dropdown = scoreItem.querySelector(`[data-export-dropdown="${scoreId}"]`);
+  if (dropdown) dropdown.hidden = true;
+
+  try {
+    setStatus(`Exportando a .${format}...`);
+    const blob = await exportScore(score.musicxml, format);
+    downloadBlob(blob, `partitura-${scoreId.slice(0, 8)}.${format}`);
+    setStatus(`Partitura exportada como .${format}`);
+  } catch (error) {
+    setStatus(error?.message || `No se pudo exportar a .${format}.`);
   }
 });
 

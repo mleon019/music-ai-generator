@@ -1,9 +1,5 @@
-const Groq = require("groq-sdk");
-
 const config = require("../config");
 const { buildMessages } = require("./promptService");
-
-const client = new Groq({ apiKey: config.groq.apiKey });
 
 function extractMusicXml(text) {
   if (!text) {
@@ -44,13 +40,22 @@ function normalizeGroqError(error) {
 async function generateMusicXml({ model, config: promptConfig }) {
   const { system, messages } = buildMessages(promptConfig);
 
+  const body = {
+    model,
+    messages: [{ role: "system", content: system }, ...messages],
+    temperature: config.groq.temperature,
+    top_p: config.groq.top_p
+  };
+
   try {
-    const response = await client.chat.completions.create({
-      model,
-      messages: [{ role: "system", content: system }, ...messages],
-      temperature: config.groq.temperature,
-      top_p: config.groq.top_p
-    });
+    const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${config.groq.apiKey}`
+      },
+      body: JSON.stringify(body)
+    }).then((res) => res.json());
 
     const content = response?.choices?.[0]?.message?.content || "";
     const xml = extractMusicXml(content);

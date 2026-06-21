@@ -371,3 +371,111 @@ button:disabled {
   font-size: inherit;
   text-decoration: underline;
 }
+
+.export-panel {
+  position: relative;
+  display: inline-block;
+}
+
+.export-trigger {
+  white-space: nowrap;
+}
+
+.export-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 6px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px var(--shadow);
+  z-index: 50;
+  min-width: 180px;
+  overflow: hidden;
+}
+
+.export-option {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 0.9rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s ease;
+  font-family: inherit;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.export-option:hover,
+.export-option:focus-visible {
+  background: rgba(42, 83, 212, 0.08);
+}
+
+.export-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.export-option:not(:last-child) {
+  border-bottom: 1px solid var(--border);
+}
+
+.export-status {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.export-inline {
+  position: relative;
+  display: inline-block;
+}
+
+.export-inline-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 10px 25px var(--shadow);
+  z-index: 50;
+  min-width: 140px;
+  overflow: hidden;
+}
+
+.export-inline-dropdown button {
+  display: block;
+  width: 100%;
+  padding: 8px 14px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 0.85rem;
+  color: var(--text);
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: none;
+  border-radius: 0;
+  transition: background 0.15s ease;
+}
+
+.export-inline-dropdown button:hover {
+  background: rgba(42, 83, 212, 0.08);
+}
+
+.export-inline-dropdown button:not(:last-child) {
+  border-bottom: 1px solid var(--border);
+}
+
+.button.small {
+  padding: 6px 12px;
+  font-size: 0.82rem;
+}

@@ -1,4 +1,5 @@
 import { createScoreViewer } from "./components/scoreViewer";
+import { createExportPanel } from "./components/exportPanel";
 import { regenerateScore } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
 import { getCurrentScoreState, setCurrentScoreState } from "./utils/scoreState";
@@ -7,6 +8,7 @@ document.documentElement.classList.add("js-ready");
 renderAuthNavigation();
 
 const scoreRoot = document.getElementById("score-root");
+const exportRoot = document.getElementById("export-root");
 const status = document.getElementById("score-status");
 const regenerateButton = document.getElementById("regenerate-button");
 
@@ -36,10 +38,19 @@ if (!musicxml) {
     .renderMusicXml(musicxml)
     .then(() => {
       setStatus("Partitura generada correctamente.");
+      mountExportPanel(musicxml);
     })
     .catch((error) => {
       setStatus(error?.message || "No se pudo visualizar la partitura. Inténtalo de nuevo más tarde.");
     });
+}
+
+function mountExportPanel(currentMusicxml) {
+  if (!exportRoot) return;
+  exportRoot.innerHTML = "";
+
+  const exportPanel = createExportPanel({ musicxml: currentMusicxml });
+  exportRoot.appendChild(exportPanel.element);
 }
 
 async function handleRegenerate() {
@@ -73,6 +84,7 @@ async function handleRegenerate() {
     setCurrentScoreState(scoreState);
 
     await scoreViewer.renderMusicXml(result.musicxml);
+    mountExportPanel(result.musicxml);
     setStatus("Partitura generada correctamente.");
   } catch (error) {
     setStatus(error?.message || "No se pudo generar la partitura. Inténtalo de nuevo más tarde.");

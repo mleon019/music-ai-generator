@@ -136,6 +136,27 @@ export function deleteAllScores() {
   });
 }
 
+export async function exportScore(musicxml, format) {
+  const response = await fetch(`${API_BASE_URL}/api/scores/export`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ musicxml, format })
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    let data;
+    try { data = JSON.parse(text); } catch { data = { error: text }; }
+    const message = data?.error || `Error al exportar (${response.status})`;
+    const error = new Error(message);
+    error.status = response.status;
+    throw error;
+  }
+
+  return response.blob();
+}
+
 export function requestPasswordReset(email) {
   return request("/api/auth/forgot-password", {
     method: "POST",

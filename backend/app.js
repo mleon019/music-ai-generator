@@ -5,6 +5,7 @@ const config = require("./src/config");
 const authRoutes = require("./src/routes/auth");
 const healthRoutes = require("./src/routes/health");
 const scoresRoutes = require("./src/routes/scores");
+const exportRoutes = require("./src/routes/export");
 const errorHandler = require("./src/middleware/errorHandler");
 
 const app = express();
@@ -30,6 +31,7 @@ app.use((req, res, next) => {
 app.use("/api/health", healthRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/scores", scoresRoutes);
+app.use("/api/scores/export", exportRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: "Not found" });
