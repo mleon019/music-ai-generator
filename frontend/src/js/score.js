@@ -49,7 +49,10 @@ function mountExportPanel(currentMusicxml) {
   if (!exportRoot) return;
   exportRoot.innerHTML = "";
 
-  const exportPanel = createExportPanel({ musicxml: currentMusicxml });
+  const exportPanel = createExportPanel({
+    musicxml: currentMusicxml,
+    getCanvasDataUrl: () => scoreViewer.getCanvasDataUrl()
+  });
   exportRoot.appendChild(exportPanel.element);
 }
 

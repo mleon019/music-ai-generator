@@ -14,7 +14,7 @@ class ExportService {
     this.strategies.set(format, strategy);
   }
 
-  async export({ musicxml, format }) {
+  async export({ musicxml, format, imageBase64 }) {
     const strategy = this.strategies.get(format);
 
     if (!strategy) {
@@ -23,7 +23,7 @@ class ExportService {
       throw error;
     }
 
-    return strategy.execute(musicxml);
+    return strategy.execute({ musicxml, imageBase64 });
   }
 }
 

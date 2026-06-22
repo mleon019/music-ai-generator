@@ -1,7 +1,7 @@
 const BaseExportStrategy = require("../BaseExportStrategy");
 
 class MusicXmlStrategy extends BaseExportStrategy {
-  async execute(musicxml) {
+  async execute({ musicxml }) {
     return {
       data: Buffer.from(musicxml, "utf-8"),
       mimeType: this.getMimeType(),

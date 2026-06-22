@@ -372,110 +372,104 @@ button:disabled {
   text-decoration: underline;
 }
 
-.export-panel {
-  position: relative;
-  display: inline-block;
+.export-inline-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.export-trigger {
-  white-space: nowrap;
+.export-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 600;
 }
 
-.export-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  margin-top: 6px;
+.export-pill-group {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.export-pill {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-strong);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  box-shadow: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.export-pill:hover {
+  background: rgba(42, 83, 212, 0.08);
+  border-color: rgba(28, 58, 163, 0.35);
+}
+
+.export-pill:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.export-status {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.export-popover {
+  position: fixed;
   background: #fff;
   border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: 0 12px 30px var(--shadow);
-  z-index: 50;
-  min-width: 180px;
+  z-index: 100;
+  min-width: 130px;
   overflow: hidden;
 }
 
-.export-option {
+.export-popover-option {
   display: block;
   width: 100%;
   padding: 10px 16px;
   background: none;
   border: none;
   text-align: left;
-  font-size: 0.9rem;
-  color: var(--text);
+  font-size: 0.88rem;
+  color: var(--accent-strong);
   cursor: pointer;
-  transition: background 0.15s ease;
   font-family: inherit;
+  font-weight: 600;
+  transition: background 0.15s ease;
   box-shadow: none;
   border-radius: 0;
 }
 
-.export-option:hover,
-.export-option:focus-visible {
+.export-popover-option:hover {
   background: rgba(42, 83, 212, 0.08);
 }
 
-.export-option:disabled {
-  opacity: 0.5;
+.export-popover-option:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-.export-option:not(:last-child) {
-  border-bottom: 1px solid var(--border);
-}
-
-.export-status {
-  margin: 10px 0 0;
-  font-size: 0.85rem;
-  color: var(--muted);
-  font-weight: 600;
-}
-
-.export-inline {
-  position: relative;
-  display: inline-block;
-}
-
-.export-inline-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 4px;
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  box-shadow: 0 10px 25px var(--shadow);
-  z-index: 50;
-  min-width: 140px;
-  overflow: hidden;
-}
-
-.export-inline-dropdown button {
-  display: block;
-  width: 100%;
-  padding: 8px 14px;
-  background: none;
-  border: none;
-  text-align: left;
-  font-size: 0.85rem;
-  color: var(--text);
-  cursor: pointer;
-  font-family: inherit;
-  box-shadow: none;
-  border-radius: 0;
-  transition: background 0.15s ease;
-}
-
-.export-inline-dropdown button:hover {
-  background: rgba(42, 83, 212, 0.08);
-}
-
-.export-inline-dropdown button:not(:last-child) {
+.export-popover-option:not(:last-child) {
   border-bottom: 1px solid var(--border);
 }
 
 .button.small {
   padding: 6px 12px;
   font-size: 0.82rem;
+}
+
+a.button,
+a.button:visited {
+  text-decoration: none;
+  color: inherit;
 }

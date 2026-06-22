@@ -2,6 +2,9 @@ import { deleteAllScores, deleteScore, exportScore, fetchScores, getAuthUser, up
 import { renderAuthNavigation } from "./utils/authNav";
 import { setCurrentScoreState } from "./utils/scoreState";
 import { downloadBlob } from "./utils/downloadFile";
+import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
+
+const FORMATS = ["musicxml", "midi", "pdf"];
 
 document.documentElement.classList.add("js-ready");
 renderAuthNavigation();
@@ -151,14 +154,7 @@ function renderScore(score, index) {
         <button class="button ghost" type="button" data-score-action="view">Visualizar partitura</button>
         <button class="button ghost" type="button" data-score-action="edit-title">Editar título</button>
         <button class="button ghost" type="button" data-score-action="delete">Eliminar</button>
-        <div class="export-inline" data-export-wrapper="${escapeHtml(score.id || "")}">
-          <button class="button ghost small" type="button" data-score-action="export">Exportar</button>
-          <div class="export-inline-dropdown" hidden data-export-dropdown="${escapeHtml(score.id || "")}">
-            <button type="button" data-export-format="musicxml">.musicxml</button>
-            <button type="button" data-export-format="midi">.midi</button>
-            <button type="button" data-export-format="pdf">.pdf</button>
-          </div>
-        </div>
+        <button class="button ghost small" type="button" data-score-action="export">Exportar</button>
       </div>
     </article>
   `;
@@ -244,11 +240,7 @@ list?.addEventListener("click", async (event) => {
   }
 
   if (action === "export") {
-    const exportWrapper = scoreItem.querySelector(`[data-export-wrapper="${scoreId}"]`);
-    const dropdown = scoreItem.querySelector(`[data-export-dropdown="${scoreId}"]`);
-    if (exportWrapper && dropdown) {
-      dropdown.hidden = !dropdown.hidden;
-    }
+    showExportPopover(button, score);
     return;
   }
 
@@ -268,44 +260,127 @@ list?.addEventListener("click", async (event) => {
   }
 });
 
-document.addEventListener("click", (event) => {
-  const wrapper = event.target.closest("[data-export-wrapper]");
-  document.querySelectorAll("[data-export-dropdown]").forEach(dd => {
-    if (!wrapper || !wrapper.contains(event.target)) {
-      dd.hidden = true;
-    }
+let activePopover = null;
+
+function showExportPopover(anchor, score) {
+  closeExportPopover();
+
+  const rect = anchor.getBoundingClientRect();
+  const popover = document.createElement("div");
+  popover.className = "export-popover";
+  popover.style.top = `${rect.bottom + 6}px`;
+  popover.style.right = `${document.documentElement.clientWidth - rect.right}px`;
+
+  FORMATS.forEach((format) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "export-popover-option";
+    btn.textContent = `.${format}`;
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      btn.textContent = `...${format}`;
+      try {
+        if (!score?.musicxml) {
+          setStatus("No se pudo exportar esta partitura.");
+          return;
+        }
+
+        if (format === "pdf") {
+          setStatus("Renderizando partitura...");
+          const imageBase64 = await renderPdfOffscreen(score.musicxml);
+          if (!imageBase64) {
+            setStatus("No se pudo generar la imagen de la partitura.");
+            return;
+          }
+          const blob = await exportScore(score.musicxml, format, imageBase64);
+          downloadBlob(blob, `partitura-${score.id?.slice(0, 8) || "unknown"}.${format}`);
+        } else {
+          setStatus(`Exportando .${format}...`);
+          const blob = await exportScore(score.musicxml, format);
+          downloadBlob(blob, `partitura-${score.id?.slice(0, 8) || "unknown"}.${format}`);
+        }
+        setStatus(`Descargado como .${format}`);
+      } catch (error) {
+        setStatus(error?.message || `Error al exportar .${format}`);
+      } finally {
+        closeExportPopover();
+      }
+    });
+    popover.appendChild(btn);
   });
-});
 
-list?.addEventListener("click", async (event) => {
-  const formatButton = event.target.closest("[data-export-format]");
-  if (!formatButton) return;
+  document.body.appendChild(popover);
+  activePopover = popover;
 
-  const scoreItem = formatButton.closest(".score-item");
-  if (!scoreItem) return;
+  setTimeout(() => {
+    document.addEventListener("click", handleOutsideClick);
+  }, 0);
+}
 
-  const scoreId = scoreItem.getAttribute("data-score-id");
-  const scoreIndex = Number(scoreItem.getAttribute("data-score-index"));
-  const score = renderedScores[scoreIndex];
-  const format = formatButton.getAttribute("data-export-format");
-
-  if (!score?.musicxml || !format) {
-    setStatus("No se pudo exportar esta partitura.");
-    return;
+function closeExportPopover() {
+  if (activePopover) {
+    activePopover.remove();
+    activePopover = null;
   }
+  document.removeEventListener("click", handleOutsideClick);
+}
 
-  const dropdown = scoreItem.querySelector(`[data-export-dropdown="${scoreId}"]`);
-  if (dropdown) dropdown.hidden = true;
+function handleOutsideClick(event) {
+  if (activePopover && !activePopover.contains(event.target)) {
+    closeExportPopover();
+  }
+}
+
+async function renderPdfOffscreen(musicxml) {
+  const container = document.createElement("div");
+  container.style.cssText = "position:fixed;top:0;left:0;width:1000px;opacity:0;pointer-events:none";
+  document.body.appendChild(container);
 
   try {
-    setStatus(`Exportando a .${format}...`);
-    const blob = await exportScore(score.musicxml, format);
-    downloadBlob(blob, `partitura-${scoreId.slice(0, 8)}.${format}`);
-    setStatus(`Partitura exportada como .${format}`);
-  } catch (error) {
-    setStatus(error?.message || `No se pudo exportar a .${format}.`);
+    const osmd = new OpenSheetMusicDisplay(container, {
+      autoResize: true,
+      drawTitle: true
+    });
+    await osmd.load(musicxml);
+    osmd.render();
+
+    await new Promise(resolve => requestAnimationFrame(resolve));
+
+    const canvas = container.querySelector("canvas");
+    if (canvas) {
+      const dataUrl = canvas.toDataURL("image/png", 1.0);
+      return dataUrl.split("base64,")[1] || dataUrl;
+    }
+
+    const svg = container.querySelector("svg");
+    if (svg) {
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const tmpCanvas = document.createElement("canvas");
+          tmpCanvas.width = img.naturalWidth * 2;
+          tmpCanvas.height = img.naturalHeight * 2;
+          const ctx = tmpCanvas.getContext("2d");
+          ctx.scale(2, 2);
+          ctx.drawImage(img, 0, 0);
+          URL.revokeObjectURL(url);
+          const data = tmpCanvas.toDataURL("image/png", 1.0);
+          resolve(data.split("base64,")[1] || data);
+        };
+        img.onerror = () => resolve(null);
+        img.src = url;
+      });
+    }
+
+    return null;
+  } finally {
+    document.body.removeChild(container);
   }
-});
+}
 
 function setStatus(message) {
   if (!status) return;

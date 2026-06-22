@@ -18,7 +18,7 @@ class MidiStrategy extends BaseExportStrategy {
     return this.toolkitPromise;
   }
 
-  async execute(musicxml) {
+  async execute({ musicxml }) {
     const tk = await this.getToolkit();
     tk.loadData(musicxml);
     const midiBase64 = tk.renderToMIDI();

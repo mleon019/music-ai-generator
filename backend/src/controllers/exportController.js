@@ -2,10 +2,10 @@ const ExportService = require("../services/export/ExportService");
 
 async function exportScore(req, res, next) {
   try {
-    const { musicxml, format } = req.body;
+    const { musicxml, format, imageBase64 } = req.body;
 
-    if (!musicxml) {
-      const error = new Error("El campo 'musicxml' es obligatorio.");
+    if (!musicxml && !imageBase64) {
+      const error = new Error("Debes enviar 'musicxml' o 'imageBase64'.");
       error.status = 400;
       throw error;
     }
@@ -16,7 +16,7 @@ async function exportScore(req, res, next) {
       throw error;
     }
 
-    const result = await ExportService.export({ musicxml, format });
+    const result = await ExportService.export({ musicxml, format, imageBase64 });
 
     res.setHeader("Content-Type", result.mimeType);
     res.setHeader("Content-Disposition", `attachment; filename="${result.filename}"`);

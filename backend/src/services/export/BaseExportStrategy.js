@@ -1,5 +1,5 @@
 class BaseExportStrategy {
-  async execute(_musicxml) {
+  async execute(_options = {}) {
     throw new Error("execute() must be implemented by subclass");
   }
 

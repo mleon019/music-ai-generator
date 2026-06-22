@@ -136,12 +136,15 @@ export function deleteAllScores() {
   });
 }
 
-export async function exportScore(musicxml, format) {
+export async function exportScore(musicxml, format, imageBase64) {
+  const body = { musicxml, format };
+  if (imageBase64) body.imageBase64 = imageBase64;
+
   const response = await fetch(`${API_BASE_URL}/api/scores/export`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ musicxml, format })
+    body: JSON.stringify(body)
   });
 
   if (!response.ok) {
