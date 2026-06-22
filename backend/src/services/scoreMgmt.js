@@ -37,13 +37,16 @@ async function generateValidXml(promptConfig) {
         console.log(`Attempt ${attempt + 1}/${maxAttempts} using model ${model}`);
         try {
             const { xml } = await generateMusicXml({ model, config: promptConfig });
+            console.log("----------------------------------------------------");
+            console.log(xml);
+            console.log("----------------------------------------------------");
             const validation = validateMusicXml(xml);
 
             if (validation.valid) {
                 return xml;
             }
         } catch (error) {
-            if (error.status === 429 || error.status === 413) {
+            if (error.status === 429 || error.status === 413 || error.status === 502) {
                 continue;
             }
 

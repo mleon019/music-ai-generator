@@ -24,13 +24,25 @@ class PdfStrategy extends BaseExportStrategy {
 
     const doc = await PDFDocument.create();
     const pngImage = await doc.embedPng(pngBuffer);
+    const page = doc.addPage([595, 842]);
 
-    const page = doc.addPage([pngImage.width, pngImage.height]);
+    const margin = 40;
+    const maxWidth = 595 - margin * 2;
+    const maxHeight = 842 - margin * 2 - 80;
+    const scale = Math.min(
+      maxWidth / pngImage.width,
+      maxHeight / pngImage.height
+    );
+    const finalWidth = pngImage.width * scale;
+    const finalHeight = pngImage.height * scale;
+    const x = (595 - finalWidth) / 2;
+    const y = 842 - finalHeight - 70;
+
     page.drawImage(pngImage, {
-      x: 0,
-      y: 0,
-      width: pngImage.width,
-      height: pngImage.height
+      x,
+      y,
+      width: finalWidth,
+      height: finalHeight
     });
 
     const pdfBytes = await doc.save();
