@@ -33,7 +33,7 @@ function validateScoreConfig(req, res, next) {
   }
 
   if (!instrument || !ALLOWED_INSTRUMENTS.has(instrument)) {
-    errors.push("instrument must be one of: Piano, Guitar, Violin, Flute, Trumpet");
+    errors.push("instrument must be one of: Piano, Violín, Flauta, Trompeta");
   }
 
   if (!Number.isFinite(measures) || measures < 1 || measures > 16) {

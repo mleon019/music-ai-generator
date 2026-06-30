@@ -1,5 +1,6 @@
 import { loginUser, setAuthUser, requestPasswordReset, getAuthUser } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
+import { validateEmail, validatePassword } from "./utils/validation";
 
 document.documentElement.classList.add("js-ready");
 
@@ -20,10 +21,15 @@ if (form) {
     setStatus("");
 
     const formData = new FormData(form);
-    const payload = {
-      email: String(formData.get("email") || "").trim(),
-      password: String(formData.get("password") || "")
-    };
+    const email = String(formData.get("email") || "").trim();
+    const password = String(formData.get("password") || "");
+    const payload = { email, password };
+
+    const emailError = validateEmail(email);
+    if (emailError) { setStatus(emailError); return; }
+
+    const passwordError = validatePassword(password);
+    if (passwordError) { setStatus(passwordError); return; }
 
     try {
       setStatus("Iniciando sesión...");
@@ -71,10 +77,11 @@ if (forgotForm) {
     }
 
     const email = String(forgotEmail?.value || "").trim();
+    const forgotEmailError = validateEmail(email);
 
-    if (!email) {
+    if (forgotEmailError) {
       if (forgotStatus) {
-        forgotStatus.textContent = "Introduce tu correo electrónico.";
+        forgotStatus.textContent = forgotEmailError;
         forgotStatus.dataset.state = "visible";
       }
       return;

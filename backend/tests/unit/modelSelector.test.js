@@ -22,4 +22,13 @@ describe("getBestModesForConfig", () => {
 
     expect(result).toEqual(["custom-model"]);
   });
+
+  it("falls back when ranking matches but no models are in the configured list", () => {
+    process.env.GROQ_MODELS = "unknown-model";
+    const { getBestModesForConfig } = loadSelector();
+
+    const result = getBestModesForConfig(1);
+
+    expect(result).toEqual(["unknown-model"]);
+  });
 });

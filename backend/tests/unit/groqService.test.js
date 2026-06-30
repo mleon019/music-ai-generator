@@ -1,6 +1,6 @@
 process.env.NODE_ENV = "test";
 
-const { extractMusicXml } = require("../../src/services/groqService");
+const { extractMusicXml, normalizeGroqError } = require("../../src/services/groqService");
 
 describe("extractMusicXml", () => {
   it("extracts MusicXML with declaration", () => {
@@ -34,5 +34,29 @@ describe("extractMusicXml", () => {
 
   it("returns null when no MusicXML exists", () => {
     expect(extractMusicXml("No xml here")).toBeNull();
+  });
+});
+
+describe("normalizeGroqError", () => {
+  it("preserves status from error.status", () => {
+    const error = new Error("Rate limited");
+    error.status = 429;
+    const result = normalizeGroqError(error);
+    expect(result.status).toBe(429);
+    expect(result.message).toBe("Rate limited");
+  });
+
+  it("extracts status from response.status", () => {
+    const error = new Error("Server error");
+    error.response = { status: 500 };
+    const result = normalizeGroqError(error);
+    expect(result.status).toBe(500);
+  });
+
+  it("handles error without status", () => {
+    const error = new Error("Network failure");
+    const result = normalizeGroqError(error);
+    expect(result.status).toBeUndefined();
+    expect(result.cause).toBe(error);
   });
 });

@@ -1,5 +1,6 @@
 import { registerUser, setAuthUser } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
+import { validateEmail, validatePassword } from "./utils/validation";
 
 document.documentElement.classList.add("js-ready");
 
@@ -14,11 +15,19 @@ if (form) {
     setStatus("");
 
     const formData = new FormData(form);
+    const email = String(formData.get("email") || "").trim();
+    const password = String(formData.get("password") || "");
     const payload = {
       name: String(formData.get("name") || "").trim(),
-      email: String(formData.get("email") || "").trim(),
-      password: String(formData.get("password") || "")
+      email,
+      password
     };
+
+    const emailError = validateEmail(email);
+    if (emailError) { setStatus(emailError); return; }
+
+    const passwordError = validatePassword(password);
+    if (passwordError) { setStatus(passwordError); return; }
 
     try {
       setStatus("Creando cuenta...");

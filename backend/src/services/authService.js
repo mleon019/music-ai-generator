@@ -5,14 +5,31 @@ const resetTokenRepository = require("../repository/resetTokenRepository");
 const { sendResetEmail } = require("./emailService");
 const { signToken, buildUserResponse } = require("../utils/authUtils");
 
-async function register({ email, name, password }) {
-  if (password.length < 6) {
-    const error = new Error(
-      "Password must be at least 6 characters"
-    );
+function getPasswordCategories(password) {
+  let count = 0;
+  if (/[a-z]/.test(password)) count++;
+  if (/[A-Z]/.test(password)) count++;
+  if (/[0-9]/.test(password)) count++;
+  if (/[^a-zA-Z0-9]/.test(password)) count++;
+  return count;
+}
+
+function validatePasswordStrength(password) {
+  if (password.length < 8) {
+    const error = new Error("La contraseña debe tener al menos 8 caracteres");
     error.status = 400;
     throw error;
   }
+
+  if (getPasswordCategories(password) < 3) {
+    const error = new Error("La contraseña debe contener al menos 3 de las siguientes categorías: minúsculas, mayúsculas, números, símbolos");
+    error.status = 400;
+    throw error;
+  }
+}
+
+async function register({ email, name, password }) {
+  validatePasswordStrength(password);
 
   const passwordHash = await bcrypt.hash(
     password,
@@ -118,14 +135,13 @@ async function updateProfile({
       throw error;
     }
 
-    if (
-      typeof newPassword !== "string" ||
-      newPassword.length < 6
-    ) {
-      const error = new Error(
-        "La nueva contraseña debe tener al menos 6 caracteres"
+    try {
+      validatePasswordStrength(newPassword);
+    } catch (error) {
+      error.message = error.message.replace(
+        "La contraseña",
+        "La nueva contraseña"
       );
-      error.status = 400;
       throw error;
     }
 
@@ -178,11 +194,13 @@ async function requestPasswordReset(email) {
 }
 
 async function resetPassword(token, newPassword) {
-  if (typeof newPassword !== "string" || newPassword.length < 6) {
-    const error = new Error("La contraseña debe tener al menos 6 caracteres");
+  if (typeof newPassword !== "string") {
+    const error = new Error("La contraseña es necesaria");
     error.status = 400;
     throw error;
   }
+
+  validatePasswordStrength(newPassword);
 
   const record = await resetTokenRepository.findValidToken(token);
 

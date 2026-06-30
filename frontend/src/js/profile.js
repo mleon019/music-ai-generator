@@ -1,5 +1,6 @@
 import { clearAuthToken, clearAuthUser, deleteAccount, getAuthUser, requestPasswordReset, setAuthUser, updateProfile } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
+import { validatePassword } from "./utils/validation";
 
 document.documentElement.classList.add("js-ready");
 
@@ -62,7 +63,10 @@ if (form) {
       delete payload.currentPassword;
     }
 
-    if (!payload.newPassword) {
+    if (payload.newPassword) {
+      const passwordError = validatePassword(payload.newPassword);
+      if (passwordError) { setStatus(passwordError); return; }
+    } else {
       delete payload.newPassword;
     }
 

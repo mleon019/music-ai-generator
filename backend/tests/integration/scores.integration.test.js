@@ -160,7 +160,7 @@ describe("POST /api/scores/regenerate", () => {
     const email = `maria+${randomUUID()}@example.com`;
     const registerResponse = await request(app)
       .post("/api/auth/register")
-      .send({ name: "Maria", email, password: "secret123" });
+      .send({ name: "Maria", email, password: "Secret123" });
 
     const cookie = extractAuthCookie(registerResponse);
 

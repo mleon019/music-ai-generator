@@ -8,13 +8,16 @@ const COOKIE_OPTIONS = {
   path: "/"
 };
 
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 function normalizeEmail(value) {
   if (typeof value !== "string") {
     return null;
   }
 
   const trimmed = value.trim().toLowerCase();
-  return trimmed.length > 0 ? trimmed : null;
+  if (trimmed.length === 0) return null;
+  return EMAIL_REGEX.test(trimmed) ? trimmed : null;
 }
 
 function normalizeName(value) {

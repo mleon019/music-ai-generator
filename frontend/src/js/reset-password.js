@@ -1,5 +1,6 @@
 import { resetPassword, clearAuthUser, clearAuthToken } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
+import { validatePassword } from "./utils/validation";
 
 document.documentElement.classList.add("js-ready");
 
@@ -24,6 +25,9 @@ if (!token) {
     const formData = new FormData(form);
     const newPassword = String(formData.get("newPassword") || "");
     const confirmPassword = String(formData.get("confirmPassword") || "");
+
+    const passwordError = validatePassword(newPassword);
+    if (passwordError) { setStatus(passwordError); return; }
 
     if (newPassword !== confirmPassword) {
       setStatus("Las contraseñas no coinciden.");

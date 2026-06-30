@@ -74,5 +74,6 @@ async function generateMusicXml({ model, config: promptConfig }) {
 
 module.exports = {
   extractMusicXml,
-  generateMusicXml
+  generateMusicXml,
+  normalizeGroqError
 };
