@@ -244,7 +244,7 @@ describe("authService", () => {
           currentPassword: "wrong",
           newPassword: "NewSecret1"
         })
-      ).rejects.toMatchObject({ status: 401 });
+      ).rejects.toMatchObject({ status: 400 });
     });
 
     it("updates password successfully", async () => {
