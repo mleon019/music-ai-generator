@@ -14,24 +14,27 @@
 
     <main class="page-shell">
       <section class="intro reveal">
-        <h1>Bienvenido de nuevo</h1>
-        <p>Inicia sesión para acceder al registro de partituras guardadas.</p>
+        <h1>Inicio de sesión</h1>
+        <p>Accede a tu cuenta para continuar.</p>
       </section>
 
       <section class="panel auth-panel reveal delay-1">
+        <h2 class="auth-card-title">Bienvenido de nuevo</h2>
+        <p class="auth-card-desc">Accede a tu cuenta para continuar.</p>
         <form class="auth-form" data-auth-form>
           <label class="field">
-            Email
-            <input type="email" name="email" required />
+            CORREO ELECTRÓNICO
+            <input type="email" name="email" placeholder="tunombre@example.com" required />
           </label>
           <label class="field">
-            Contraseña
+            CONTRASEÑA
             <input type="password" name="password" minlength="8" required />
           </label>
+          <a href="#" class="forgot-link" data-forgot-password>¿Olvidaste tu contraseña?</a>
           <div class="form-actions">
             <button type="submit" class="button primary">Iniciar sesión</button>
           </div>
-          <p class="auth-alt"><button type="button" class="link link-button" data-forgot-password>¿Olvidaste tu contraseña?</button></p>
+          <p class="auth-alt">¿No tienes cuenta? <a class="auth-link" href="/register/">Crear cuenta</a></p>
           <p class="status" data-status></p>
         </form>
       </section>
@@ -39,18 +42,24 @@
 
     <div class="modal-overlay" data-modal hidden>
       <div class="modal-panel panel reveal">
-        <h2>Restablecer contraseña</h2>
-        <p>Se enviará un enlace a tu correo electrónico para que puedas restablecer tu contraseña.</p>
+        <div class="modal-header">
+          <h2>Restablecer contraseña</h2>
+          <button class="icon-btn" type="button" data-modal-close title="Cerrar"><i data-lucide="x" class="icon-sm"></i></button>
+        </div>
+        <div class="warning-panel">
+          <i data-lucide="mail" class="warning-icon"></i>
+          <p>Se enviará un enlace de recuperación a tu correo electrónico.</p>
+        </div>
         <form class="auth-form" data-forgot-form>
           <label class="field">
             Email
             <input type="email" name="email" data-forgot-email required />
           </label>
-          <div class="form-actions">
-            <button type="button" class="button ghost" data-modal-close>Cancelar</button>
+          <div class="form-actions equal">
+            <button type="button" class="button ghost" data-modal-cancel>Cancelar</button>
             <button type="submit" class="button primary">Enviar enlace</button>
           </div>
-          <p class="status" data-forgot-status></p>
+          <p class="status" data-forgot-status data-state="idle"></p>
         </form>
       </div>
     </div>

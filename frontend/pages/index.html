@@ -9,23 +9,42 @@
   <body class="page-landing">
     <main class="hero">
       <div class="hero-content reveal">
-        <p class="eyebrow">Generador de partituras con IA</p>
-        <h1>Compón partituras enteras con un solo click.</h1>
-        <p class="lead">Fija la configuración que más desees: duración, tempo, indicador de compás, e instrumento. Tu composición se mostrará automáticamente.</p>
+        <span class="pill tagline"><i data-lucide="sparkles" class="icon-sm"></i>Composición musical con inteligencia artificial</span>
+        <h1>Partituras en segundos, generadas por IA</h1>
+        <p class="lead">Crea composiciones musicales en segundos. Configura cada detalle y exporta en los formatos más utilizados.</p>
         <div class="hero-actions">
-          <a class="button primary" href="/form.html">Comenzar a generar</a>
+          <a class="button primary" href="/form.html"><span>Generar partitura</span><i data-lucide="chevron-right" class="icon-sm"></i></a>
+          <a class="button ghost" href="/register/" id="cta-secondary">Crear cuenta gratis</a>
         </div>
         <div class="hero-links" data-auth-nav="hero">
         </div>
       </div>
       <div class="hero-card reveal delay-1">
-        <h2>Paso a paso</h2>
-        <ul class="feature-list">
-          <li><span class="badge">1</span> Completa el formulario de configuración.</li>
-          <li><span class="badge">2</span> Genera partituras de forma instantánea.</li>
-          <li><span class="badge">3</span> Renderiza y revisa el resultado.</li>
-        </ul>
-        <p class="hero-note">Genera y renderiza una partitura al momento. Inicia sesión para no perder tus creaciones.</p>
+        <h2 class="hero-card-title">CÓMO FUNCIONA</h2>
+        <div class="timeline">
+          <div class="timeline-step">
+            <div class="timeline-marker"><span class="step-num">1</span></div>
+            <div class="timeline-body">
+              <h3 class="step-title">Configura</h3>
+              <p class="step-desc">Selecciona instrumento, tempo, indicador de compás y duración exactos para tu pieza.</p>
+            </div>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-marker"><span class="step-num">2</span></div>
+            <div class="timeline-body">
+              <h3 class="step-title">Genera</h3>
+              <p class="step-desc">La IA compone una partitura profesional al instante.</p>
+            </div>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-marker"><span class="step-num">3</span></div>
+            <div class="timeline-body">
+              <h3 class="step-title">Exporta</h3>
+              <p class="step-desc">Descarga en PDF, MIDI o MusicXML y guárdala en tu historial personal.</p>
+            </div>
+          </div>
+        </div>
+        <p id="card-cta" class="hero-card-cta">Inicia sesión para guardar tus composiciones en el historial.</p>
       </div>
     </main>
     <script type="module" src="/src/js/landing.js"></script>

@@ -154,7 +154,7 @@ async function updateProfile({
       const error = new Error(
         "La contraseña actual es incorrecta"
       );
-      error.status = 401;
+      error.status = 400;
       throw error;
     }
 
@@ -216,14 +216,27 @@ async function resetPassword(token, newPassword) {
   await userRepository.updateUser(record.user_id, record.name, passwordHash);
 }
 
-async function deleteAccount(userId) {
-  const deleted =
-    await userRepository.deleteUser(userId);
+async function deleteAccount(userId, password) {
+  const user = await userRepository.findById(userId);
+
+  if (!user) {
+    const error = new Error("User not found");
+    error.status = 404;
+    throw error;
+  }
+
+  const isValid = await bcrypt.compare(password, user.password_hash);
+
+  if (!isValid) {
+    const error = new Error("Contraseña incorrecta");
+    error.status = 400;
+    throw error;
+  }
+
+  const deleted = await userRepository.deleteUser(userId);
 
   if (!deleted) {
-    const error = new Error(
-      "User not found"
-    );
+    const error = new Error("User not found");
     error.status = 404;
     throw error;
   }

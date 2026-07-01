@@ -111,9 +111,10 @@ export function updateProfile(payload) {
   });
 }
 
-export function deleteAccount() {
+export function deleteAccount(password) {
   return request("/api/auth/account", {
-    method: "DELETE"
+    method: "DELETE",
+    body: JSON.stringify({ password })
   });
 }
 

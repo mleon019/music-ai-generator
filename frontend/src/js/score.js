@@ -1,5 +1,6 @@
 import { createScoreViewer } from "./components/scoreViewer";
 import { createExportPanel } from "./components/exportPanel";
+import { createIcons, icons } from "lucide";
 import { regenerateScore } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
 import { getCurrentScoreState, setCurrentScoreState } from "./utils/scoreState";
@@ -18,6 +19,7 @@ if (!scoreRoot) {
 
 const scoreViewer = createScoreViewer();
 scoreRoot.appendChild(scoreViewer.element);
+createIcons({ icons });
 
 let scoreState = getCurrentScoreState();
 const musicxml = scoreState?.musicxml;
@@ -39,6 +41,7 @@ if (!musicxml) {
     .then(() => {
       setStatus("Partitura generada correctamente.");
       mountExportPanel(musicxml);
+      createIcons({ icons });
     })
     .catch((error) => {
       setStatus(error?.message || "No se pudo visualizar la partitura. Inténtalo de nuevo más tarde.");
@@ -88,6 +91,7 @@ async function handleRegenerate() {
 
     await scoreViewer.renderMusicXml(result.musicxml);
     mountExportPanel(result.musicxml);
+    createIcons({ icons });
     setStatus("Partitura generada correctamente.");
   } catch (error) {
     setStatus(error?.message || "No se pudo generar la partitura. Inténtalo de nuevo más tarde.");

@@ -2,11 +2,11 @@
 
 :root {
   color-scheme: light;
-  --ink: #1b1f24;
+  --ink: #1E293B;
   --muted: #5e6a7a;
-  --accent: #2a53d4;
-  --accent-strong: #1c3aa3;
-  --card: #ffffff;
+  --accent: #4F46E5;
+  --accent-strong: #4338CA;
+  --card: #FFFFFF;
   --border: #d6ddea;
   --shadow: rgba(15, 23, 42, 0.12);
   --surface: rgba(255, 255, 255, 0.72);

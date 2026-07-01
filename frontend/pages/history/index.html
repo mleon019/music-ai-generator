@@ -14,30 +14,32 @@
 
     <main class="page-shell">
       <section class="intro reveal">
-        <h1>Hola, <span data-user-name></span></h1>
-        <p>Tus partituras guardadas aparecerán aqui. Pulsa en cada partitura para visualizarla.</p>
+        <div class="history-header">
+          <div>
+            <h1 data-history-title>Historial</h1>
+            <p class="history-count" data-history-count></p>
+          </div>
+          <button class="button ghost" type="button" data-delete-all-scores title="Borrar historial"><i data-lucide="trash-2" class="icon-sm"></i>Borrar historial</button>
+        </div>
       </section>
 
-      <section class="panel reveal delay-1">
-        <div class="history-header">
-          <h2>Partituras guardadas</h2>
-          <div class="history-actions">
-            <button class="button ghost" type="button" data-delete-all-scores>Borrar historial</button>
-            <a class="link" href="/form.html">Generar nueva partitura</a>
-          </div>
-        </div>
-        <p class="status" data-status></p>
-        <div class="history-list" data-history-list></div>
-      </section>
+      <div class="history-list" data-history-list></div>
+      <p class="status" data-status></p>
     </main>
 
     <div class="modal-overlay" data-delete-modal hidden>
       <div class="modal-panel panel reveal">
-        <h2>Eliminar historial</h2>
-        <p>¿Estás seguro de que quieres eliminar todas tus partituras? Esta acción no se puede deshacer.</p>
-        <div class="form-actions" style="margin-top: 1rem;">
+        <div class="modal-header">
+          <h2>Borrar historial</h2>
+          <button class="icon-btn" type="button" data-delete-close title="Cerrar"><i data-lucide="x" class="icon-sm"></i></button>
+        </div>
+        <div class="warning-panel">
+          <i data-lucide="info" class="warning-icon"></i>
+          <p>¿Estás seguro de que quieres eliminar todas tus partituras? Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="form-actions equal">
           <button type="button" class="button ghost" data-delete-cancel>Cancelar</button>
-          <button type="button" class="button danger" data-delete-confirm>Eliminar todo</button>
+          <button type="button" class="button danger" data-delete-confirm>Borrar todo</button>
         </div>
       </div>
     </div>

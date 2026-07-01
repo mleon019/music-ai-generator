@@ -18,40 +18,93 @@
         <p>Modifica tus datos personales cuando sea necesario.</p>
       </section>
 
-      <section class="panel auth-panel profile-panel reveal delay-1">
-        <div class="profile-summary">
-          <p class="eyebrow">Sesión iniciada como</p>
-          <p class="profile-email" data-profile-email></p>
+      <!-- Card 1: Personal Info -->
+      <section class="panel auth-panel reveal delay-1">
+        <div class="profile-card-header">
+          <i data-lucide="circle-user-round" class="profile-avatar-icon"></i>
+          <span class="profile-name-heading" data-profile-name-display></span>
         </div>
-
-        <form class="auth-form" data-profile-form>
-          <label class="field">
-            Nombre
-            <input type="text" name="name" required />
-          </label>
-          <label class="field">
-            Contraseña actual
-            <input type="password" name="currentPassword" minlength="8" />
-          </label>
-          <label class="field">
-            Nueva contraseña
-            <input type="password" name="newPassword" minlength="8" />
-          </label>
-          <div class="form-actions profile-actions">
-            <button type="submit" class="button primary">Guardar cambios</button>
-            <button type="button" class="button ghost" data-reset-password>Restablecer contraseña</button>
-            <button type="button" class="button ghost danger" data-delete-account>Eliminar cuenta</button>
+        <hr class="profile-divider">
+        <div class="profile-field">
+          <label class="field-label">NOMBRE</label>
+          <div class="profile-value-row" data-name-display>
+            <span data-profile-name-text></span>
+            <button class="profile-edit-btn" data-edit-name title="Editar nombre"><i data-lucide="pencil" class="icon-sm"></i>Editar</button>
           </div>
-          <p class="status" data-status></p>
-        </form>
+          <div class="profile-value-row" data-name-edit hidden>
+            <input type="text" data-name-input class="profile-name-input" maxlength="100" />
+            <button class="icon-btn" data-save-name title="Guardar"><i data-lucide="check" class="icon-sm"></i></button>
+            <button class="icon-btn" data-cancel-name title="Cancelar"><i data-lucide="x" class="icon-sm"></i></button>
+          </div>
+        </div>
+        <div class="profile-field">
+          <label class="field-label">CORREO ELECTRÓNICO</label>
+          <input type="email" class="profile-email-input" data-profile-email readonly tabindex="-1" />
+        </div>
+      </section>
+
+      <!-- Card 2: Security -->
+      <section class="panel auth-panel reveal delay-1">
+        <div class="profile-card-header">
+          <i data-lucide="shield" class="profile-section-icon"></i>
+          <span class="profile-section-title">Seguridad</span>
+        </div>
+        <div class="profile-password-area" data-password-area style="margin-top: 16px;">
+          <div class="profile-field" data-password-mask>
+            <label class="field-label">CONTRASEÑA ACTUAL</label>
+            <div class="profile-password-row">
+              <input type="password" class="profile-password-mask-input" value="********" readonly tabindex="-1" />
+              <button class="button small ghost" data-toggle-password>Cambiar</button>
+            </div>
+          </div>
+          <div class="profile-field" data-current-password-field hidden>
+            <label class="field-label">CONTRASEÑA ACTUAL</label>
+            <input type="password" name="currentPassword" minlength="8" placeholder="Tu contraseña actual" />
+          </div>
+          <div class="profile-field" data-new-password-field hidden>
+            <label class="field-label">NUEVA CONTRASEÑA</label>
+            <input type="password" name="newPassword" minlength="8" placeholder="Nueva contraseña" />
+          </div>
+          <div class="form-actions equal" data-password-actions hidden>
+            <button type="button" class="button ghost" data-cancel-password>Cancelar</button>
+            <button type="button" class="button primary" data-save-password>Actualizar</button>
+          </div>
+        </div>
+        <hr class="profile-divider">
+        <a href="#" class="forgot-link" data-forgot-password>¿Olvidaste tu contraseña?</a>
+        <p class="status" data-status></p>
+      </section>
+
+      <!-- Card 3: Danger Zone -->
+      <section class="panel auth-panel reveal delay-1">
+        <span class="danger-header-title">Zona de peligro</span>
+        <hr class="profile-divider">
+        <div class="danger-row">
+          <div>
+            <p class="danger-action-title">Eliminar cuenta</p>
+            <p class="danger-desc">Esta acción no se puede deshacer.</p>
+          </div>
+          <button type="button" class="button ghost danger" data-delete-account>Eliminar cuenta</button>
+        </div>
+        <hr class="profile-divider">
+        <button type="button" class="icon-link danger-logout" data-logout><i data-lucide="log-out" class="icon-sm"></i>Cerrar sesión</button>
       </section>
     </main>
 
     <div class="modal-overlay" data-delete-modal hidden>
       <div class="modal-panel panel reveal">
-        <h2>Eliminar cuenta</h2>
-        <p>¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer. Todas tus partituras guardadas se eliminarán permanentemente.</p>
-        <div class="form-actions" style="margin-top: 1rem;">
+        <div class="modal-header">
+          <h2>Eliminar cuenta</h2>
+          <button class="icon-btn" type="button" data-delete-close title="Cerrar"><i data-lucide="x" class="icon-sm"></i></button>
+        </div>
+        <div class="warning-panel">
+          <i data-lucide="info" class="warning-icon"></i>
+          <p>Esta acción eliminará permanentemente tu cuenta y no se puede deshacer. Se eliminarán todos tus datos.</p>
+        </div>
+        <p class="confirm-text">Introduce tu contraseña para confirmar.</p>
+        <input type="password" class="confirm-input" data-delete-password placeholder="Tu contraseña actual" />
+        <p class="status" data-delete-status></p>
+        <div class="form-actions equal">
           <button type="button" class="button ghost" data-delete-cancel>Cancelar</button>
           <button type="button" class="button danger" data-delete-confirm>Eliminar cuenta</button>
         </div>
@@ -60,18 +113,20 @@
 
     <div class="modal-overlay" data-forgot-modal hidden>
       <div class="modal-panel panel reveal">
-        <h2>Restablecer contraseña</h2>
-        <p>Se enviará un enlace a tu correo electrónico para que puedas restablecer tu contraseña.</p>
+        <div class="modal-header">
+          <h2>Restablecer contraseña</h2>
+          <button class="icon-btn" type="button" data-forgot-close title="Cerrar"><i data-lucide="x" class="icon-sm"></i></button>
+        </div>
+        <div class="warning-panel">
+          <i data-lucide="mail" class="warning-icon"></i>
+          <p>Se enviará un enlace de recuperación a:<br><strong data-forgot-email-display></strong></p>
+        </div>
         <form class="auth-form" data-forgot-form>
-          <label class="field">
-            Email
-            <input type="email" name="email" data-forgot-email required readonly />
-          </label>
-          <div class="form-actions">
+          <div class="form-actions equal">
             <button type="button" class="button ghost" data-forgot-cancel>Cancelar</button>
             <button type="submit" class="button primary">Enviar enlace</button>
           </div>
-          <p class="status" data-forgot-status></p>
+          <p class="status" data-forgot-status data-state="idle"></p>
         </form>
       </div>
     </div>

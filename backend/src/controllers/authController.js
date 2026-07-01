@@ -114,7 +114,15 @@ async function deleteAccount(req, res, next) {
       });
     }
 
-    await authService.deleteAccount(userId);
+    const { password } = req.body;
+
+    if (!password) {
+      return res.status(400).json({
+        error: "La contraseña es necesaria"
+      });
+    }
+
+    await authService.deleteAccount(userId, password);
 
     return res.sendStatus(204);
   } catch (error) {

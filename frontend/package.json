@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "lucide": "^1.22.0",
     "opensheetmusicdisplay": "^1.8.11"
   },
   "devDependencies": {

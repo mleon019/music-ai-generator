@@ -2,9 +2,10 @@ import { deleteAllScores, deleteScore, exportScore, fetchScores, getAuthUser, up
 import { renderAuthNavigation } from "./utils/authNav";
 import { setCurrentScoreState } from "./utils/scoreState";
 import { downloadBlob } from "./utils/downloadFile";
+import { createIcons, icons } from "lucide";
 import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
 
-const FORMATS = ["musicxml", "midi", "pdf"];
+const FORMATS = ["pdf", "midi", "musicxml"];
 
 document.documentElement.classList.add("js-ready");
 renderAuthNavigation();
@@ -15,16 +16,17 @@ const deleteAllButton = document.querySelector("[data-delete-all-scores]");
 const deleteModal = document.querySelector("[data-delete-modal]");
 const deleteConfirm = document.querySelector("[data-delete-confirm]");
 const deleteCancel = document.querySelector("[data-delete-cancel]");
-const userName = document.querySelector("[data-user-name]");
+const historyTitle = document.querySelector("[data-history-title]");
+const historyCount = document.querySelector("[data-history-count]");
 let renderedScores = [];
 
-if (deleteAllButton) {
-  deleteAllButton.hidden = !getAuthUser();
+const authUser = getAuthUser();
+if (historyTitle && authUser?.name) {
+  historyTitle.textContent = `Historial de ${authUser.name}`;
 }
 
-const authUser = getAuthUser();
-if (userName) {
-  userName.textContent = authUser?.name || "";
+if (deleteAllButton) {
+  deleteAllButton.hidden = true;
 }
 
 loadScores();
@@ -53,24 +55,32 @@ if (deleteConfirm) {
   deleteConfirm.addEventListener("click", handleDeleteAllScores);
 }
 
+const deleteClose = document.querySelector("[data-delete-close]");
+if (deleteClose && deleteModal) {
+  deleteClose.addEventListener("click", () => {
+    deleteModal.hidden = true;
+  });
+}
+
 
 function startInlineEdit(scoreItem, score) {
-  const titleH3 = scoreItem.querySelector("h3");
-  if (!titleH3) return;
+  const titleEl = scoreItem.querySelector("[data-score-title]");
+  if (!titleEl) return;
 
-  const currentTitle = score.title || "Untitled";
+  const currentTitle = score.title || "Sin título";
+  const h3 = titleEl;
 
   const editContainer = document.createElement("div");
   editContainer.className = "title-edit";
   editContainer.innerHTML = `
     <input type="text" class="title-input" value="${escapeHtml(currentTitle)}" maxlength="100">
     <div class="title-edit-actions">
-      <button class="button small" type="button" data-action="save-title">Guardar</button>
-      <button class="button small ghost" type="button" data-action="cancel-title">Cancelar</button>
+      <button class="icon-btn" type="button" data-action="save-title" title="Guardar"><i data-lucide="check" class="icon-sm"></i></button>
+      <button class="icon-btn" type="button" data-action="cancel-title" title="Cancelar"><i data-lucide="x" class="icon-sm"></i></button>
     </div>
   `;
 
-  titleH3.replaceWith(editContainer);
+  h3.replaceWith(editContainer);
 
   const input = editContainer.querySelector(".title-input");
   const saveBtn = editContainer.querySelector('[data-action="save-title"]');
@@ -82,7 +92,8 @@ function startInlineEdit(scoreItem, score) {
   const restoreOriginal = () => {
     if (editContainer.parentNode) {
       const restoredH3 = document.createElement("h3");
-      restoredH3.innerHTML = escapeHtml(currentTitle);
+      restoredH3.setAttribute("data-score-title", "");
+      restoredH3.textContent = currentTitle;
       editContainer.replaceWith(restoredH3);
     }
   };
@@ -140,24 +151,62 @@ function renderScore(score, index) {
 
   return `
     <article class="score-item" data-score-id="${escapeHtml(score.id || "")}" data-score-index="${index}">
-      <div>
-        <h3>${escapeHtml(score.title || "Untitled")}</h3>
-        <p class="score-meta">${escapeHtml(createdAt)}</p>
+      <div class="score-item-body">
+        <h3 data-score-title>${escapeHtml(score.title || "Sin título")}</h3>
         <div class="score-tags">
           <span class="pill">${escapeHtml(config.instrument || "-")}</span>
           <span class="pill">${escapeHtml(config.timeSignature || "-")}</span>
           <span class="pill">${escapeHtml(String(config.tempo || "-") + " BPM")}</span>
           <span class="pill">${escapeHtml(String(config.measures || "-") + " compases")}</span>
         </div>
+        <p class="score-date">${escapeHtml(createdAt)}</p>
       </div>
-      <div class="score-actions">
-        <button class="button ghost" type="button" data-score-action="view">Visualizar partitura</button>
-        <button class="button ghost" type="button" data-score-action="edit-title">Editar título</button>
-        <button class="button ghost" type="button" data-score-action="delete">Eliminar</button>
-        <button class="button ghost small" type="button" data-score-action="export">Exportar</button>
+      <div class="score-actions-right">
+        <button class="icon-btn" type="button" data-score-action="view" title="Visualizar partitura"><i data-lucide="eye" class="icon-sm"></i></button>
+        <button class="icon-btn" type="button" data-score-action="edit-title" title="Editar título"><i data-lucide="pencil" class="icon-sm"></i></button>
+        <div class="score-export-group">
+          <button class="export-btn" type="button" data-score-action="export-pdf" title="Descargar PDF">PDF</button>
+          <button class="export-btn" type="button" data-score-action="export-midi" title="Descargar MIDI">MIDI</button>
+          <button class="export-btn" type="button" data-score-action="export-musicxml" title="Descargar MusicXML">XML</button>
+        </div>
+        <button class="icon-btn" type="button" data-score-action="delete" title="Eliminar"><i data-lucide="trash-2" class="icon-sm"></i></button>
       </div>
     </article>
   `;
+}
+
+const FORMAT_LABELS = {
+  "pdf": "pdf",
+  "midi": "midi",
+  "musicxml": "musicxml"
+};
+
+async function handleExport(score, format) {
+  try {
+    if (!score?.musicxml) {
+      setStatus("No se pudo exportar esta partitura.");
+      return;
+    }
+
+    if (format === "pdf") {
+      setStatus("Renderizando partitura...");
+      const imageBase64 = await renderPdfOffscreen(score.musicxml);
+      if (!imageBase64) {
+        setStatus("No se pudo generar la imagen de la partitura.");
+        return;
+      }
+      const blob = await exportScore(score.musicxml, format, imageBase64);
+      downloadBlob(blob, `partitura-${score.id?.slice(0, 8) || "unknown"}.${format}`);
+    } else {
+      setStatus(`Exportando .${format}...`);
+      const ext = format === "musicxml" ? "musicxml" : format;
+      const blob = await exportScore(score.musicxml, format);
+      downloadBlob(blob, `partitura-${score.id?.slice(0, 8) || "unknown"}.${ext}`);
+    }
+    setStatus(`Descargado como .${format === "musicxml" ? "musicxml" : format}`);
+  } catch (error) {
+    setStatus(error?.message || `Error al exportar .${format}`);
+  }
 }
 
 async function handleDeleteAllScores() {
@@ -174,34 +223,50 @@ async function handleDeleteAllScores() {
 async function loadScores() {
   if (!list) return;
 
-  if (!getAuthUser()) {
+  if (!authUser) {
     if (deleteAllButton) deleteAllButton.hidden = true;
     list.innerHTML = "<p class=\"empty-state\">Inicia sesión para ver tu historial.</p>";
     setStatus("");
+    updateCount(0);
+    createIcons({ icons });
     return;
   }
-
-  if (deleteAllButton) deleteAllButton.hidden = false;
 
   try {
     setStatus("Cargando tus partituras...");
     const result = await fetchScores();
     const scores = result?.scores || [];
     renderedScores = scores;
+    updateCount(scores.length);
 
     if (scores.length === 0) {
-      list.innerHTML = "<p class=\"empty-state\">Aún no has generado partituras.</p>";
+      if (deleteAllButton) deleteAllButton.hidden = true;
+      list.innerHTML = `
+        <div class="empty-panel">
+          <i data-lucide="music-2" class="empty-icon"></i>
+          <p class="empty-title">Sin partituras guardadas</p>
+          <p class="empty-subtitle">Tus partituras generadas aparecerán aquí</p>
+        </div>
+      `;
       setStatus("");
+      createIcons({ icons });
       return;
     }
 
     list.innerHTML = scores.map((score, index) => renderScore(score, index)).join("");
+    if (deleteAllButton) deleteAllButton.hidden = false;
     setStatus("");
+    createIcons({ icons });
   } catch (error) {
     if (error?.status !== 401) {
       setStatus(error?.message || "No se pudo cargar las partituras. Inténtalo de nuevo más tarde.");
     }
   }
+}
+
+function updateCount(count) {
+  if (!historyCount) return;
+  historyCount.textContent = count === 1 ? "1 partitura guardada" : `${count} partituras guardadas`;
 }
 
 
@@ -239,8 +304,9 @@ list?.addEventListener("click", async (event) => {
     return;
   }
 
-  if (action === "export") {
-    showExportPopover(button, score);
+  if (action?.startsWith("export-")) {
+    const format = action.replace("export-", "");
+    await handleExport(score, format);
     return;
   }
 
@@ -259,77 +325,6 @@ list?.addEventListener("click", async (event) => {
     }
   }
 });
-
-let activePopover = null;
-
-function showExportPopover(anchor, score) {
-  closeExportPopover();
-
-  const rect = anchor.getBoundingClientRect();
-  const popover = document.createElement("div");
-  popover.className = "export-popover";
-  popover.style.top = `${rect.bottom + 6}px`;
-  popover.style.right = `${document.documentElement.clientWidth - rect.right}px`;
-
-  FORMATS.forEach((format) => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "export-popover-option";
-    btn.textContent = `.${format}`;
-    btn.addEventListener("click", async () => {
-      btn.disabled = true;
-      btn.textContent = `...${format}`;
-      try {
-        if (!score?.musicxml) {
-          setStatus("No se pudo exportar esta partitura.");
-          return;
-        }
-
-        if (format === "pdf") {
-          setStatus("Renderizando partitura...");
-          const imageBase64 = await renderPdfOffscreen(score.musicxml);
-          if (!imageBase64) {
-            setStatus("No se pudo generar la imagen de la partitura.");
-            return;
-          }
-          const blob = await exportScore(score.musicxml, format, imageBase64);
-          downloadBlob(blob, `partitura-${score.id?.slice(0, 8) || "unknown"}.${format}`);
-        } else {
-          setStatus(`Exportando .${format}...`);
-          const blob = await exportScore(score.musicxml, format);
-          downloadBlob(blob, `partitura-${score.id?.slice(0, 8) || "unknown"}.${format}`);
-        }
-        setStatus(`Descargado como .${format}`);
-      } catch (error) {
-        setStatus(error?.message || `Error al exportar .${format}`);
-      } finally {
-        closeExportPopover();
-      }
-    });
-    popover.appendChild(btn);
-  });
-
-  document.body.appendChild(popover);
-  activePopover = popover;
-
-  setTimeout(() => {
-    document.addEventListener("click", handleOutsideClick);
-  }, 0);
-}
-
-function closeExportPopover() {
-  if (activePopover) {
-    activePopover.remove();
-    activePopover = null;
-  }
-  document.removeEventListener("click", handleOutsideClick);
-}
-
-function handleOutsideClick(event) {
-  if (activePopover && !activePopover.contains(event.target)) {
-    closeExportPopover();
-  }
-}
 
 async function renderPdfOffscreen(musicxml) {
   const container = document.createElement("div");

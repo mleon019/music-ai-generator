@@ -1,57 +1,155 @@
-const ALLOWED_TIME_SIGNATURES = ["4/4", "3/4"];
+import { createIcons, icons } from "lucide";
+
+const ALLOWED_TIME_SIGNATURES = ["3/4", "4/4"];
 const ALLOWED_INSTRUMENTS = ["Piano", "Violín", "Flauta", "Trompeta"];
 
-function createField(labelText, input) {
+function createRangeField({ label, min, max, step, value, leftLabel, rightLabel, marks }) {
+  const field = document.createElement("div");
+  field.className = "field range-field";
+
+  const labelEl = document.createElement("label");
+  labelEl.className = "range-label";
+  labelEl.textContent = label;
+  field.appendChild(labelEl);
+
+  const valueDisplay = document.createElement("output");
+  valueDisplay.className = "range-value";
+  valueDisplay.textContent = value;
+  field.appendChild(valueDisplay);
+
+  const input = document.createElement("input");
+  input.type = "range";
+  input.min = String(min);
+  input.max = String(max);
+  if (step !== undefined) input.step = String(step);
+  input.value = String(value);
+  input.className = "range-input";
+  field.appendChild(input);
+
+  const labels = document.createElement("div");
+  labels.className = "range-labels";
+
+  if (leftLabel) {
+    const left = document.createElement("span");
+    left.className = "range-label-start";
+    left.textContent = leftLabel;
+    labels.appendChild(left);
+  }
+
+  if (rightLabel) {
+    const right = document.createElement("span");
+    right.className = "range-label-end";
+    right.textContent = rightLabel;
+    labels.appendChild(right);
+  }
+
+  if (marks) {
+    const marksContainer = document.createElement("div");
+    marksContainer.className = "range-marks";
+    for (const m of marks) {
+      const mark = document.createElement("span");
+      mark.className = "range-mark";
+      mark.textContent = String(m);
+      marksContainer.appendChild(mark);
+    }
+    field.appendChild(marksContainer);
+  }
+
+  field.appendChild(labels);
+
+  input.addEventListener("input", () => {
+    valueDisplay.textContent = input.value;
+  });
+
+  return { element: field, input };
+}
+
+function createSelectField(label, options, defaultValue) {
   const field = document.createElement("div");
   field.className = "field";
 
-  const label = document.createElement("label");
-  label.textContent = labelText;
-  label.appendChild(input);
+  const labelEl = document.createElement("label");
+  labelEl.className = "field-label";
+  labelEl.textContent = label;
 
-  field.appendChild(label);
-  return field;
-}
-
-function createSelect(options, defaultValue) {
   const select = document.createElement("select");
-  for (const optionText of options) {
+  select.className = "field-select";
+  for (const opt of options) {
     const option = document.createElement("option");
-    option.value = optionText;
-    option.textContent = optionText;
-    if (optionText === defaultValue) {
-      option.selected = true;
-    }
+    option.value = opt;
+    option.textContent = opt;
+    if (opt === defaultValue) option.selected = true;
     select.appendChild(option);
   }
-  return select;
+
+  labelEl.appendChild(select);
+  field.appendChild(labelEl);
+  return { element: field, select };
+}
+
+function createTimeSignatureGroup(options, defaultValue) {
+  const field = document.createElement("div");
+  field.className = "field";
+
+  const labelEl = document.createElement("label");
+  labelEl.className = "field-label";
+  labelEl.textContent = "Indicador de compás";
+  field.appendChild(labelEl);
+
+  const group = document.createElement("div");
+  group.className = "time-signature-group";
+
+  let selectedValue = defaultValue;
+
+  for (const opt of options) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "time-signature-btn";
+    btn.textContent = opt;
+    if (opt === defaultValue) btn.classList.add("active");
+
+    btn.addEventListener("click", () => {
+      group.querySelectorAll(".time-signature-btn").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      selectedValue = opt;
+    });
+
+    group.appendChild(btn);
+  }
+
+  field.appendChild(group);
+
+  return {
+    element: field,
+    getValue: () => selectedValue
+  };
 }
 
 export function createConfigForm({ onSubmit }) {
   const form = document.createElement("form");
   form.className = "config-form";
 
-  const grid = document.createElement("div");
-  grid.className = "form-grid";
+  const instrument = createSelectField("Instrumento", ALLOWED_INSTRUMENTS, "Piano");
 
-  const timeSignatureSelect = createSelect(ALLOWED_TIME_SIGNATURES, "4/4");
-  const tempoInput = document.createElement("input");
-  tempoInput.type = "number";
-  tempoInput.min = "40";
-  tempoInput.max = "168";
-  tempoInput.value = "120";
+  const tempo = createRangeField({
+    label: "Tempo",
+    min: 40,
+    max: 168,
+    value: 100,
+    leftLabel: "40 Largo",
+    rightLabel: "168 Presto"
+  });
 
-  const instrumentSelect = createSelect(ALLOWED_INSTRUMENTS, "Piano");
-  const measuresInput = document.createElement("input");
-  measuresInput.type = "number";
-  measuresInput.min = "1";
-  measuresInput.max = "16";
-  measuresInput.value = "4";
+  const timeSignature = createTimeSignatureGroup(ALLOWED_TIME_SIGNATURES, "4/4");
 
-  grid.appendChild(createField("Indicador de compás", timeSignatureSelect));
-  grid.appendChild(createField("Tempo (BPM)", tempoInput));
-  grid.appendChild(createField("Instrumento", instrumentSelect));
-  grid.appendChild(createField("Nº de compases", measuresInput));
+  const duration = createRangeField({
+    label: "Duración",
+    min: 1,
+    max: 16,
+    step: 1,
+    value: 8,
+    marks: [1, 4, 8, 12, 16]
+  });
 
   const error = document.createElement("p");
   error.className = "form-error";
@@ -62,22 +160,27 @@ export function createConfigForm({ onSubmit }) {
   const submitButton = document.createElement("button");
   submitButton.type = "submit";
   submitButton.className = "button primary";
-  submitButton.textContent = "Generate";
+  submitButton.innerHTML = '<i data-lucide="music-2" class="icon-sm"></i><span>Generar partitura</span>';
 
   actions.appendChild(submitButton);
 
-  form.appendChild(grid);
+  form.appendChild(instrument.element);
+  form.appendChild(tempo.element);
+  form.appendChild(timeSignature.element);
+  form.appendChild(duration.element);
   form.appendChild(error);
   form.appendChild(actions);
+
+  createIcons({ icons, attrs: { "aria-hidden": "true" } });
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
 
     const config = {
-      timeSignature: timeSignatureSelect.value,
-      tempo: Number(tempoInput.value),
-      instrument: instrumentSelect.value,
-      measures: Number(measuresInput.value)
+      timeSignature: timeSignature.getValue(),
+      tempo: Number(tempo.input.value),
+      instrument: instrument.select.value,
+      measures: Number(duration.input.value)
     };
 
     const errors = [];
@@ -91,7 +194,7 @@ export function createConfigForm({ onSubmit }) {
     }
 
     if (!ALLOWED_INSTRUMENTS.includes(config.instrument)) {
-      errors.push("Seleciona un instrumento aceptado.");
+      errors.push("Selecciona un instrumento aceptado.");
     }
 
     if (!Number.isFinite(config.measures) || config.measures < 1 || config.measures > 16) {
@@ -108,7 +211,8 @@ export function createConfigForm({ onSubmit }) {
 
   function setLoading(isLoading) {
     submitButton.disabled = isLoading;
-    submitButton.textContent = isLoading ? "Generando..." : "Generar";
+    const span = submitButton.querySelector("span");
+    if (span) span.textContent = isLoading ? "Generando..." : "Generar partitura";
   }
 
   function setError(message) {

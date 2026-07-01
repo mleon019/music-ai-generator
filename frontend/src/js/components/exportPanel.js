@@ -2,36 +2,37 @@ import { exportScore } from "../api";
 import { downloadBlob } from "../utils/downloadFile";
 
 const FORMATS = ["musicxml", "midi", "pdf"];
+const FORMAT_LABELS = {
+  musicxml: "MUSICXML",
+  midi: "MIDI",
+  pdf: "PDF"
+};
+const FORMAT_ICONS = {
+  musicxml: "file-code-2",
+  midi: "file-audio-2",
+  pdf: "file-text"
+};
 
 export function createExportPanel({ musicxml, getCanvasDataUrl }) {
   const wrapper = document.createElement("div");
-  wrapper.className = "export-inline-group";
-
-  const label = document.createElement("span");
-  label.className = "export-label";
-  label.textContent = "Descargar:";
-  wrapper.appendChild(label);
+  wrapper.className = "export-button-group";
 
   const statusMsg = document.createElement("span");
   statusMsg.className = "export-status";
   statusMsg.hidden = true;
   wrapper.appendChild(statusMsg);
 
-  const pillGroup = document.createElement("span");
-  pillGroup.className = "export-pill-group";
-  wrapper.appendChild(pillGroup);
-
   FORMATS.forEach((format) => {
-    const pill = document.createElement("button");
-    pill.type = "button";
-    pill.className = "export-pill";
-    pill.textContent = `.${format}`;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "button ghost";
+    btn.innerHTML = `<i data-lucide="${FORMAT_ICONS[format]}" class="icon-sm"></i>${FORMAT_LABELS[format]}`;
 
-    pill.addEventListener("click", async () => {
+    btn.addEventListener("click", async () => {
       await handleExport(format);
     });
 
-    pillGroup.appendChild(pill);
+    wrapper.appendChild(btn);
   });
 
   async function handleExport(format) {
@@ -61,8 +62,8 @@ export function createExportPanel({ musicxml, getCanvasDataUrl }) {
   }
 
   function setLoading(isLoading) {
-    const pills = pillGroup.querySelectorAll(".export-pill");
-    pills.forEach(p => p.disabled = isLoading);
+    const btns = wrapper.querySelectorAll(".button");
+    btns.forEach(b => b.disabled = isLoading);
   }
 
   function setStatus(message) {

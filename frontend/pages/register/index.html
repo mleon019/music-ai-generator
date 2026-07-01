@@ -14,27 +14,30 @@
 
     <main class="page-shell">
       <section class="intro reveal">
-        <h1>Crea tu cuenta</h1>
-        <p>Registrate para guardar tus creaciones y acceder a tu historial personal.</p>
+        <h1>Crear cuenta</h1>
+        <p>Empieza a crear partituras con inteligencia artificial.</p>
       </section>
 
       <section class="panel auth-panel reveal delay-1">
+        <h2 class="auth-card-title">Crear cuenta</h2>
+        <p class="auth-card-desc">Empieza a crear partituras con IA.</p>
         <form class="auth-form" data-auth-form>
           <label class="field">
-            Nombre
+            NOMBRE DE USUARIO
             <input type="text" name="name" required />
           </label>
           <label class="field">
-            Email
-            <input type="email" name="email" required />
+            CORREO ELECTRÓNICO
+            <input type="email" name="email" placeholder="tunombre@example.com" required />
           </label>
           <label class="field">
-            Contraseña
+            CONTRASEÑA
             <input type="password" name="password" minlength="8" required />
           </label>
           <div class="form-actions">
             <button type="submit" class="button primary">Crear cuenta</button>
           </div>
+          <p class="auth-alt">¿Ya tienes cuenta? <a class="auth-link" href="/login/">Iniciar sesión</a></p>
           <p class="status" data-status></p>
         </form>
       </section>
