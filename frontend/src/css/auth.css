@@ -1,0 +1,36 @@
+.auth-panel {
+  width: 50%;
+  justify-self: center;
+}
+
+.auth-card-title {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.auth-card-desc {
+  margin: 0 0 20px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.auth-alt {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.auth-link {
+  color: var(--accent);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}

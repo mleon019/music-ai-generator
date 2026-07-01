@@ -166,11 +166,6 @@ a.button.primary:visited {
   height: 18px;
 }
 
-.hero-note {
-  color: var(--muted);
-  margin: 0;
-}
-
 .brand {
   font-weight: 700;
   font-size: 1.1rem;
@@ -522,11 +517,6 @@ button:disabled {
   color: var(--muted);
 }
 
-.is-disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
 .hero-links {
   display: flex;
   gap: 16px;
@@ -616,11 +606,6 @@ button:disabled {
 .export-btn:hover {
   background: rgba(79, 70, 229, 0.08);
   border-color: rgba(79, 70, 229, 0.3);
-}
-
-.score-icon-actions {
-  display: flex;
-  gap: 2px;
 }
 
 .icon-btn {
@@ -1002,47 +987,6 @@ button:disabled {
   font-size: 0.82rem;
   color: var(--muted);
   font-weight: 600;
-}
-
-.export-popover {
-  position: fixed;
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: 0 12px 30px var(--shadow);
-  z-index: 100;
-  min-width: 130px;
-  overflow: hidden;
-}
-
-.export-popover-option {
-  display: block;
-  width: 100%;
-  padding: 10px 16px;
-  background: none;
-  border: none;
-  text-align: left;
-  font-size: 0.88rem;
-  color: var(--accent-strong);
-  cursor: pointer;
-  font-family: inherit;
-  font-weight: 600;
-  transition: background 0.15s ease;
-  box-shadow: none;
-  border-radius: 0;
-}
-
-.export-popover-option:hover {
-  background: rgba(42, 83, 212, 0.08);
-}
-
-.export-popover-option:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.export-popover-option:not(:last-child) {
-  border-bottom: 1px solid var(--border);
 }
 
 .button.small {

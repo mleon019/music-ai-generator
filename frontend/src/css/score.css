@@ -1,0 +1,51 @@
+.score-panel {
+  overflow-x: auto;
+}
+
+.score-wrapper {
+  min-height: 220px;
+}
+
+.score-canvas {
+  min-height: 200px;
+  color: var(--muted);
+}
+
+.action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.action-row-left,
+.action-row-right {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-row-left .button,
+.action-row-right .button {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.export-button-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.export-button-group .button {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.export-status {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 600;
+}

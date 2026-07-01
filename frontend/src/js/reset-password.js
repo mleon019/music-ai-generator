@@ -1,6 +1,7 @@
 import { resetPassword, clearAuthUser, clearAuthToken } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
 import { validatePassword } from "./utils/validation";
+import { createSetStatus } from "./utils/status";
 
 document.documentElement.classList.add("js-ready");
 
@@ -10,12 +11,10 @@ const params = new URLSearchParams(window.location.search);
 const token = params.get("token");
 const form = document.getElementById("reset-form");
 const status = document.getElementById("reset-status");
+const setStatus = createSetStatus(status);
 
 if (!token) {
-  if (status) {
-    status.textContent = "Enlace de restablecimiento inválido o caducado.";
-    status.dataset.state = "visible";
-  }
+  setStatus("Enlace de restablecimiento inválido o caducado.");
   if (form) form.hidden = true;
 } else if (form) {
   form.addEventListener("submit", async (event) => {
@@ -47,13 +46,4 @@ if (!token) {
       setStatus(error?.message || "No se pudo restablecer la contraseña. Inténtalo de nuevo más tarde.");
     }
   });
-}
-
-function setStatus(message) {
-  if (!status) {
-    return;
-  }
-
-  status.textContent = message;
-  status.dataset.state = message ? "visible" : "idle";
 }

@@ -1,7 +1,10 @@
-import { clearAuthToken, clearAuthUser, deleteAccount, getAuthUser, requestPasswordReset, setAuthUser, updateProfile } from "./api";
+import { deleteAccount, getAuthUser, logout, requestPasswordReset, setAuthUser, updateProfile } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
 import { validatePassword } from "./utils/validation";
 import { createIcons, icons } from "lucide";
+import { createSetStatus } from "./utils/status";
+import { onClickOutside } from "./utils/clickOutside";
+import { createModal } from "./utils/modal";
 
 document.documentElement.classList.add("js-ready");
 
@@ -22,6 +25,7 @@ const cancelNameBtn = document.querySelector("[data-cancel-name]");
 
 // Card 2 - Security
 const status = document.querySelector("[data-status]");
+const setStatus = createSetStatus(status);
 const togglePasswordBtn = document.querySelector("[data-toggle-password]");
 const passwordMask = document.querySelector("[data-password-mask]");
 const currentPasswordField = document.querySelector("[data-current-password-field]");
@@ -61,9 +65,6 @@ if (authUser) {
   renderUserData();
 } else {
   setStatus("Por favor, inicia sesión primero para ver tu perfil.");
-  document.querySelectorAll(".panel input, .panel button").forEach((el) => {
-    el.disabled = true;
-  });
 }
 
 // ── Card 1: Inline name edit ──
@@ -124,19 +125,8 @@ if (nameInput) {
     }
   });
 
-  const handleOutsideClick = (e) => {
-    if (!nameEdit?.isConnected) {
-      document.removeEventListener("click", handleOutsideClick);
-      return;
-    }
-    if (!nameEdit.hidden && !nameEdit.contains(e.target) && !editNameBtn?.contains(e.target)) {
-      cancelNameEdit();
-      document.removeEventListener("click", handleOutsideClick);
-    }
-  };
-
   editNameBtn?.addEventListener("click", () => {
-    setTimeout(() => document.addEventListener("click", handleOutsideClick), 10);
+    if (nameEdit) onClickOutside(nameEdit, cancelNameEdit);
   });
 }
 
@@ -213,6 +203,10 @@ if (cancelPasswordBtn) {
 
 // ── Card 2: Forgot password link ──
 
+const resetForgotModal = () => {
+  if (forgotStatus) forgotStatus.dataset.state = "idle";
+};
+
 if (forgotLink && forgotModal && forgotEmailDisplay) {
   forgotLink.addEventListener("click", (event) => {
     event.preventDefault();
@@ -220,46 +214,34 @@ if (forgotLink && forgotModal && forgotEmailDisplay) {
     forgotModal.hidden = false;
     createIcons({ icons });
   });
+  createModal(forgotModal, { onClose: resetForgotModal });
 }
 
 // ── Card 3: Logout ──
 
 if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    clearAuthToken();
-    clearAuthUser();
-    sessionStorage.removeItem("currentScoreState");
-    window.location.assign("/index.html");
-  });
+  logoutBtn.addEventListener("click", logout);
 }
 
 // ── Modal: Delete account ──
-
-if (deleteButton && deleteModal) {
-  deleteButton.addEventListener("click", () => {
-    deleteModal.hidden = false;
-    createIcons({ icons });
-  });
-}
 
 const resetDeleteModal = () => {
   if (deletePassword) deletePassword.value = "";
   if (deleteStatus) deleteStatus.dataset.state = "idle";
 };
 
+if (deleteButton && deleteModal) {
+  deleteButton.addEventListener("click", () => {
+    deleteModal.hidden = false;
+    createIcons({ icons });
+  });
+  createModal(deleteModal, { onClose: resetDeleteModal });
+}
+
 if (deleteCancel && deleteModal) {
   deleteCancel.addEventListener("click", () => {
     deleteModal.hidden = true;
     resetDeleteModal();
-  });
-}
-
-if (deleteModal) {
-  deleteModal.addEventListener("click", (event) => {
-    if (event.target === deleteModal) {
-      deleteModal.hidden = true;
-      resetDeleteModal();
-    }
   });
 }
 
@@ -277,10 +259,7 @@ if (deleteConfirm) {
     try {
       if (deleteStatus) deleteStatus.dataset.state = "idle";
       await deleteAccount(password);
-      clearAuthToken();
-      clearAuthUser();
-      sessionStorage.removeItem("currentScoreState");
-      window.location.assign("/index.html");
+      logout();
     } catch (error) {
       if (deleteStatus) {
         deleteStatus.textContent = error?.message || "No se pudo eliminar la cuenta. Inténtalo de nuevo más tarde.";
@@ -302,16 +281,7 @@ if (deleteClose && deleteModal) {
 if (forgotCancel && forgotModal) {
   forgotCancel.addEventListener("click", () => {
     forgotModal.hidden = true;
-    if (forgotStatus) forgotStatus.dataset.state = "idle";
-  });
-}
-
-if (forgotModal) {
-  forgotModal.addEventListener("click", (event) => {
-    if (event.target === forgotModal) {
-      forgotModal.hidden = true;
-      if (forgotStatus) forgotStatus.dataset.state = "idle";
-    }
+    resetForgotModal();
   });
 }
 
@@ -356,9 +326,3 @@ if (forgotClose && forgotModal) {
 }
 
 createIcons({ icons });
-
-function setStatus(message) {
-  if (!status) return;
-  status.textContent = message;
-  status.dataset.state = message ? "visible" : "idle";
-}

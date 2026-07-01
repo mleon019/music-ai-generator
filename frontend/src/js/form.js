@@ -2,6 +2,7 @@ import { generateScore } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
 import { createConfigForm } from "./components/formComponent";
 import { setCurrentScoreState } from "./utils/scoreState";
+import { createSetStatus } from "./utils/status";
 
 document.documentElement.classList.add("js-ready");
 renderAuthNavigation();
@@ -13,20 +14,13 @@ if (!formRoot) {
   throw new Error("Form root element is missing.");
 }
 
+const setStatus = createSetStatus(status);
+
 const formControls = createConfigForm({
   onSubmit: handleSubmit
 });
 
 formRoot.appendChild(formControls.element);
-
-function setStatus(message) {
-  if (!status) {
-    return;
-  }
-
-  status.textContent = message;
-  status.dataset.state = message ? "visible" : "idle";
-}
 
 async function handleSubmit(config) {
   setStatus("Generando partitura...");

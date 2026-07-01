@@ -1,0 +1,139 @@
+.profile-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0;
+}
+
+.profile-avatar-icon {
+  width: 40px;
+  height: 40px;
+  color: var(--accent);
+}
+
+.profile-name-heading {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.profile-section-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--accent);
+}
+
+.profile-section-title {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.profile-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 16px 0;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.profile-field[hidden] {
+  display: none;
+}
+
+.profile-value-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-value-row[hidden] {
+  display: none;
+}
+
+.profile-name-input {
+  flex: 1;
+  min-width: 160px;
+}
+
+.profile-email-input {
+  background: rgba(0,0,0,0.03);
+  cursor: not-allowed;
+  color: var(--muted);
+}
+
+.profile-password-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-password-mask-input {
+  flex: 1;
+  cursor: not-allowed;
+  background: rgba(0,0,0,0.03);
+  color: var(--muted);
+  letter-spacing: 4px;
+}
+
+.danger-header-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #9a1f2b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.danger-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.danger-action-title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.danger-desc {
+  margin: 4px 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.danger {
+  color: #9a1f2b;
+  border-color: rgba(154, 31, 43, 0.3) !important;
+}
+
+.profile-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.15s ease, color 0.15s ease;
+  box-shadow: none;
+}
+
+.profile-edit-btn:hover {
+  background: rgba(79, 70, 229, 0.08);
+  color: var(--accent);
+}

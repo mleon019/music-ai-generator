@@ -1,6 +1,7 @@
 import { registerUser, setAuthUser } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
 import { validateEmail, validatePassword } from "./utils/validation";
+import { createSetStatus } from "./utils/status";
 
 document.documentElement.classList.add("js-ready");
 
@@ -8,6 +9,7 @@ renderAuthNavigation();
 
 const form = document.querySelector("[data-auth-form]");
 const status = document.querySelector("[data-status]");
+const setStatus = createSetStatus(status);
 
 if (form) {
   form.addEventListener("submit", async (event) => {
@@ -40,11 +42,4 @@ if (form) {
   });
 }
 
-function setStatus(message) {
-  if (!status) {
-    return;
-  }
 
-  status.textContent = message;
-  status.dataset.state = message ? "visible" : "idle";
-}

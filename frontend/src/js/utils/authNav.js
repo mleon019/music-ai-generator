@@ -1,4 +1,5 @@
-import { clearAuthToken, clearAuthUser, getAuthUser } from "../api";
+import { getAuthUser, logout } from "../api";
+import { escapeHtml } from "./html";
 
 const PROFILE_ICON = `
   <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -59,20 +60,7 @@ function renderGuestNavigation(mode) {
 
 function bindLogoutButtons() {
   document.querySelectorAll("[data-logout]").forEach((button) => {
-    button.addEventListener("click", () => {
-      clearAuthToken();
-      clearAuthUser();
-      sessionStorage.removeItem("currentScoreState");
-      window.location.assign("/index.html");
-    });
+    button.addEventListener("click", logout);
   });
 }
 
-function escapeHtml(value) {
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}

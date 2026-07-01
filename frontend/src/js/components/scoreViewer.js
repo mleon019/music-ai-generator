@@ -1,4 +1,5 @@
 import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
+import { svgToPngBase64 } from "../utils/image";
 
 export function createScoreViewer() {
   const wrapper = document.createElement("div");
@@ -35,28 +36,6 @@ export function createScoreViewer() {
     }
 
     return null;
-  }
-
-  function svgToPngBase64(svg) {
-    const svgData = new XMLSerializer().serializeToString(svg);
-    const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        const tmpCanvas = document.createElement("canvas");
-        tmpCanvas.width = img.naturalWidth * 2;
-        tmpCanvas.height = img.naturalHeight * 2;
-        const ctx = tmpCanvas.getContext("2d");
-        ctx.scale(2, 2);
-        ctx.drawImage(img, 0, 0);
-        URL.revokeObjectURL(url);
-        resolve(tmpCanvas.toDataURL("image/png", 1.0));
-      };
-      img.onerror = () => resolve(null);
-      img.src = url;
-    });
   }
 
   return {

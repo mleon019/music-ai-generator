@@ -4,6 +4,7 @@ import { createIcons, icons } from "lucide";
 import { regenerateScore } from "./api";
 import { renderAuthNavigation } from "./utils/authNav";
 import { getCurrentScoreState, setCurrentScoreState } from "./utils/scoreState";
+import { createSetStatus } from "./utils/status";
 
 document.documentElement.classList.add("js-ready");
 renderAuthNavigation();
@@ -16,6 +17,8 @@ const regenerateButton = document.getElementById("regenerate-button");
 if (!scoreRoot) {
   throw new Error("Hubo un problema con la partitura. Inténtalo de nuevo más tarde.");
 }
+
+const setStatus = createSetStatus(status);
 
 const scoreViewer = createScoreViewer();
 scoreRoot.appendChild(scoreViewer.element);
@@ -102,11 +105,4 @@ async function handleRegenerate() {
   }
 }
 
-function setStatus(message) {
-  if (!status) {
-    return;
-  }
 
-  status.textContent = message;
-  status.dataset.state = message ? "visible" : "idle";
-}

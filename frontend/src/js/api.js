@@ -1,3 +1,5 @@
+import { clearCurrentScoreState } from "./utils/scoreState";
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export function clearAuthToken() {
@@ -9,6 +11,13 @@ export function clearAuthToken() {
 
 export function clearAuthUser() {
   localStorage.removeItem("authUser");
+}
+
+export function logout() {
+  clearAuthToken();
+  clearAuthUser();
+  clearCurrentScoreState();
+  window.location.assign("/index.html");
 }
 
 export function getAuthUser() {
@@ -149,6 +158,16 @@ export async function exportScore(musicxml, format, imageBase64) {
   });
 
   if (!response.ok) {
+    if (response.status === 401) {
+      clearAuthToken();
+      clearAuthUser();
+      const path = window.location.pathname;
+      if (!path.startsWith("/login/") && !path.startsWith("/register/")) {
+        window.location.assign("/login/");
+        return;
+      }
+    }
+
     const text = await response.text();
     let data;
     try { data = JSON.parse(text); } catch { data = { error: text }; }

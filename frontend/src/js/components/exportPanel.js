@@ -1,5 +1,6 @@
 import { exportScore } from "../api";
 import { downloadBlob } from "../utils/downloadFile";
+import { extractBase64 } from "../utils/image";
 
 const FORMATS = ["musicxml", "midi", "pdf"];
 const FORMAT_LABELS = {
@@ -46,7 +47,7 @@ export function createExportPanel({ musicxml, getCanvasDataUrl }) {
           setStatus("No se pudo capturar la imagen de la partitura.");
           return;
         }
-        const raw = imageBase64.split("base64,")[1] || imageBase64;
+        const raw = extractBase64(imageBase64);
         const blob = await exportScore(musicxml, format, raw);
         downloadBlob(blob, `partitura.${format}`);
       } else {

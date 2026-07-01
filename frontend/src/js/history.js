@@ -4,8 +4,11 @@ import { setCurrentScoreState } from "./utils/scoreState";
 import { downloadBlob } from "./utils/downloadFile";
 import { createIcons, icons } from "lucide";
 import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
-
-const FORMATS = ["pdf", "midi", "musicxml"];
+import { createSetStatus } from "./utils/status";
+import { escapeHtml } from "./utils/html";
+import { onClickOutside } from "./utils/clickOutside";
+import { createModal } from "./utils/modal";
+import { svgToPngBase64, extractBase64 } from "./utils/image";
 
 document.documentElement.classList.add("js-ready");
 renderAuthNavigation();
@@ -13,6 +16,7 @@ renderAuthNavigation();
 const list = document.querySelector("[data-history-list]");
 const status = document.querySelector("[data-status]");
 const deleteAllButton = document.querySelector("[data-delete-all-scores]");
+const setStatus = createSetStatus(status);
 const deleteModal = document.querySelector("[data-delete-modal]");
 const deleteConfirm = document.querySelector("[data-delete-confirm]");
 const deleteCancel = document.querySelector("[data-delete-cancel]");
@@ -35,19 +39,12 @@ if (deleteAllButton && deleteModal) {
   deleteAllButton.addEventListener("click", () => {
     deleteModal.hidden = false;
   });
+  createModal(deleteModal);
 }
 
 if (deleteCancel && deleteModal) {
   deleteCancel.addEventListener("click", () => {
     deleteModal.hidden = true;
-  });
-}
-
-if (deleteModal) {
-  deleteModal.addEventListener("click", (event) => {
-    if (event.target === deleteModal) {
-      deleteModal.hidden = true;
-    }
   });
 }
 
@@ -128,18 +125,7 @@ function startInlineEdit(scoreItem, score) {
     }
   });
 
-  const handleOutsideClick = (e) => {
-    if (!editContainer.isConnected) {
-      document.removeEventListener("click", handleOutsideClick);
-      return;
-    }
-    if (!editContainer.contains(e.target)) {
-      restoreOriginal();
-      document.removeEventListener("click", handleOutsideClick);
-    }
-  };
-
-  setTimeout(() => document.addEventListener("click", handleOutsideClick), 10);
+  onClickOutside(editContainer, restoreOriginal);
 }
 
 
@@ -174,12 +160,6 @@ function renderScore(score, index) {
     </article>
   `;
 }
-
-const FORMAT_LABELS = {
-  "pdf": "pdf",
-  "midi": "midi",
-  "musicxml": "musicxml"
-};
 
 async function handleExport(score, format) {
   try {
@@ -343,32 +323,13 @@ async function renderPdfOffscreen(musicxml) {
 
     const canvas = container.querySelector("canvas");
     if (canvas) {
-      const dataUrl = canvas.toDataURL("image/png", 1.0);
-      return dataUrl.split("base64,")[1] || dataUrl;
+      return extractBase64(canvas.toDataURL("image/png", 1.0));
     }
 
     const svg = container.querySelector("svg");
     if (svg) {
-      const svgData = new XMLSerializer().serializeToString(svg);
-      const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => {
-          const tmpCanvas = document.createElement("canvas");
-          tmpCanvas.width = img.naturalWidth * 2;
-          tmpCanvas.height = img.naturalHeight * 2;
-          const ctx = tmpCanvas.getContext("2d");
-          ctx.scale(2, 2);
-          ctx.drawImage(img, 0, 0);
-          URL.revokeObjectURL(url);
-          const data = tmpCanvas.toDataURL("image/png", 1.0);
-          resolve(data.split("base64,")[1] || data);
-        };
-        img.onerror = () => resolve(null);
-        img.src = url;
-      });
+      const dataUrl = await svgToPngBase64(svg);
+      return dataUrl ? extractBase64(dataUrl) : null;
     }
 
     return null;
@@ -377,17 +338,4 @@ async function renderPdfOffscreen(musicxml) {
   }
 }
 
-function setStatus(message) {
-  if (!status) return;
-  status.textContent = message;
-  status.dataset.state = message ? "visible" : "idle";
-}
 
-function escapeHtml(value) {
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}

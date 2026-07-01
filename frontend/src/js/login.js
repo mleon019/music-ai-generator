@@ -2,6 +2,8 @@ import { loginUser, setAuthUser, requestPasswordReset, getAuthUser } from "./api
 import { renderAuthNavigation } from "./utils/authNav";
 import { validateEmail, validatePassword } from "./utils/validation";
 import { createIcons, icons } from "lucide";
+import { createSetStatus } from "./utils/status";
+import { createModal } from "./utils/modal";
 
 document.documentElement.classList.add("js-ready");
 
@@ -9,6 +11,7 @@ renderAuthNavigation();
 
 const form = document.querySelector("[data-auth-form]");
 const status = document.querySelector("[data-status]");
+const setStatus = createSetStatus(status);
 const modal = document.querySelector("[data-modal]");
 const forgotButton = document.querySelector("[data-forgot-password]");
 const forgotForm = document.querySelector("[data-forgot-form]");
@@ -54,6 +57,11 @@ if (forgotButton && modal) {
     modal.hidden = false;
     createIcons({ icons });
   });
+  createModal(modal, {
+    onClose: () => {
+      if (forgotStatus) forgotStatus.dataset.state = "idle";
+    },
+  });
 }
 
 const closeModal = () => {
@@ -67,15 +75,6 @@ if (modalClose && modal) {
 
 if (modalCancel && modal) {
   modalCancel.addEventListener("click", closeModal);
-}
-
-if (modal) {
-  modal.addEventListener("click", (event) => {
-    if (event.target === modal) {
-      modal.hidden = true;
-      if (forgotStatus) forgotStatus.dataset.state = "idle";
-    }
-  });
 }
 
 if (forgotForm) {
@@ -114,12 +113,3 @@ if (forgotForm) {
 }
 
 createIcons({ icons });
-
-function setStatus(message) {
-  if (!status) {
-    return;
-  }
-
-  status.textContent = message;
-  status.dataset.state = message ? "visible" : "idle";
-}
