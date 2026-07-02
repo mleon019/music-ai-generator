@@ -14,6 +14,7 @@ button,
   justify-content: center;
   gap: 8px;
   font-family: inherit;
+  font-size: inherit;
 }
 
 a.button.primary,
@@ -32,6 +33,11 @@ a.button.primary:visited {
   color: var(--accent-strong);
   border: 1px solid rgba(79, 70, 229, 0.35);
   box-shadow: none;
+}
+
+a.button.ghost,
+a.button.ghost:visited {
+  color: var(--accent-strong);
 }
 
 .button.danger {
