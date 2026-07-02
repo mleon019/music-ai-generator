@@ -44,18 +44,10 @@
   margin-bottom: 16px;
 }
 
-.profile-field[hidden] {
-  display: none;
-}
-
 .profile-value-row {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.profile-value-row[hidden] {
-  display: none;
 }
 
 .profile-name-input {
@@ -117,23 +109,9 @@
 }
 
 .profile-edit-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: transparent;
-  border: none;
   padding: 4px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  color: var(--muted);
+  gap: 6px;
   font-family: inherit;
   font-size: 0.85rem;
   font-weight: 600;
-  transition: background 0.15s ease, color 0.15s ease;
-  box-shadow: none;
-}
-
-.profile-edit-btn:hover {
-  background: rgba(79, 70, 229, 0.08);
-  color: var(--accent);
 }

@@ -202,10 +202,6 @@ input {
   margin-top: 8px;
 }
 
-.form-actions[hidden] {
-  display: none;
-}
-
 .form-actions .button.primary {
   flex: 1;
 }
@@ -213,10 +209,6 @@ input {
 .form-actions.equal {
   display: flex;
   gap: 10px;
-}
-
-.form-actions.equal[hidden] {
-  display: none;
 }
 
 .form-actions.equal .button {

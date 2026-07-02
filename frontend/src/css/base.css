@@ -10,10 +10,16 @@
   --border: #d6ddea;
   --shadow: rgba(15, 23, 42, 0.12);
   --surface: rgba(255, 255, 255, 0.72);
+  --hover-bg: rgba(79, 70, 229, 0.08);
+  --transition-fast: background 0.15s ease, color 0.15s ease;
 }
 
 * {
   box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
 }
 
 body {

@@ -21,25 +21,14 @@
 }
 
 .action-row-left,
-.action-row-right {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.action-row-left .button,
-.action-row-right .button {
-  flex: 1;
-  white-space: nowrap;
-}
-
+.action-row-right,
 .export-button-group {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.export-button-group .button {
+.action-row .button {
   flex: 1;
   white-space: nowrap;
 }

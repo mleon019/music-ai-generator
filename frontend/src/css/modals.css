@@ -8,10 +8,6 @@
   z-index: 100;
 }
 
-.modal-overlay[hidden] {
-  display: none !important;
-}
-
 .modal-panel {
   width: 90%;
   max-width: 440px;

@@ -1,9 +1,10 @@
 import { getAuthUser, logout } from "../api";
 import { escapeHtml } from "./html";
+import { createIcons, icons } from "lucide";
 
-const PROFILE_ICON = '<i data-lucide="user" class="icon-sm"></i>';
+const PROFILE_ICON = '<i data-lucide="user" class="icon-md"></i>';
 
-const LOGOUT_ICON = '<i data-lucide="log-out" class="icon-sm"></i>';
+const LOGOUT_ICON = '<i data-lucide="log-out" class="icon-md"></i>';
 
 export function renderAuthNavigation() {
   injectBrandIcon();
@@ -18,7 +19,21 @@ export function renderAuthNavigation() {
       : renderGuestNavigation(mode);
   });
 
+  highlightActiveLink();
   bindLogoutButtons();
+  createIcons({ icons });
+}
+
+function highlightActiveLink() {
+  const currentPath = window.location.pathname;
+  document.querySelectorAll(".topbar-actions-links a").forEach((link) => {
+    const href = link.getAttribute("href");
+    if (!href) return;
+    const pageName = href.replace(/\.html$/, "");
+    if (currentPath.startsWith(pageName)) {
+      link.classList.add("active");
+    }
+  });
 }
 
 function injectBrandIcon() {
@@ -34,9 +49,11 @@ function renderLoggedNavigation(mode, user) {
   }
 
   return `
-    <a class="link" href="/form.html">Generar</a>
-    <a class="link" href="/history.html">Historial</a>
-    <a class="link" href="/profile.html">Perfil</a>
+    <div class="topbar-actions-links">
+      <a class="link" href="/form.html">Generar</a>
+      <a class="link" href="/history.html">Historial</a>
+      <a class="link" href="/profile.html">Perfil</a>
+    </div>
     <div class="topbar-actions-right">
       <a class="link icon-link" href="/profile.html" aria-label="Mi perfil">
         ${PROFILE_ICON}
@@ -58,7 +75,9 @@ function renderGuestNavigation(mode) {
   }
 
   return `
-    <a class="link" href="/form.html">Generar</a>
+    <div class="topbar-actions-links">
+      <a class="link" href="/form.html">Generar</a>
+    </div>
     <div class="topbar-actions-right">
       <a class="link" href="/login.html">Iniciar sesión</a>
       <a class="button primary" href="/register.html">Crear cuenta</a>

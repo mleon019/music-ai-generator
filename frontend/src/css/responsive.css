@@ -6,17 +6,24 @@
 
   .topbar {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
   }
 
   .topbar-actions {
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 12px;
   }
 
+  .topbar-actions-links {
+    flex: none;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
   .topbar-actions-right {
-    margin-left: 0;
+    flex: none;
     width: 100%;
     justify-content: flex-start;
   }

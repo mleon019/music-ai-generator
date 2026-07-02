@@ -78,6 +78,7 @@ function startInlineEdit(scoreItem, score) {
   `;
 
   h3.replaceWith(editContainer);
+  createIcons({ icons });
 
   const input = editContainer.querySelector(".title-input");
   const saveBtn = editContainer.querySelector('[data-action="save-title"]');

@@ -57,22 +57,27 @@ a.button:visited {
   color: inherit;
 }
 
-.icon-btn {
+.icon-btn,
+.profile-edit-btn {
   background: transparent;
   border: none;
-  padding: 6px;
-  cursor: pointer;
   border-radius: 8px;
   color: var(--muted);
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: var(--transition-fast);
   box-shadow: none;
 }
 
-.icon-btn:hover {
-  background: rgba(79, 70, 229, 0.08);
+.icon-btn {
+  padding: 6px;
+}
+
+.icon-btn:hover,
+.profile-edit-btn:hover {
+  background: var(--hover-bg);
   color: var(--accent);
 }
 
@@ -88,6 +93,21 @@ a.button:visited {
   padding: 0;
   color: var(--muted);
   font: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.back-link,
+.danger-logout {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: none;
 }
 
 .back-link {
@@ -96,31 +116,15 @@ a.button:visited {
   gap: 6px;
   font-size: 0.88rem;
   font-weight: 600;
-  color: var(--muted);
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  font-family: inherit;
   margin-bottom: 16px;
 }
 
-.back-link:hover {
-  color: var(--ink);
-}
-
 .danger-logout {
-  background: transparent;
-  border: none;
-  padding: 0;
   font-size: 0.9rem;
-  color: var(--muted);
-  cursor: pointer;
-  box-shadow: none;
-  font-family: inherit;
   font-weight: 600;
 }
 
+.back-link:hover,
 .danger-logout:hover {
   color: var(--ink);
 }
