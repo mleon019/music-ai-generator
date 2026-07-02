@@ -1,0 +1,103 @@
+.page-legal .intro {
+  max-width: 800px;
+  justify-self: center;
+  width: 100%;
+}
+
+.page-legal .back-link {
+  display: flex;
+}
+
+#legal-root {
+  max-width: 800px;
+  line-height: 1.7;
+  font-size: 0.95rem;
+  color: var(--ink);
+  justify-self: center;
+}
+
+#legal-root h1 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.8rem;
+  margin: 0 0 24px;
+  letter-spacing: -0.02em;
+  display: block;
+}
+
+#legal-root h2 {
+  font-size: 1.2rem;
+  margin: 32px 0 12px;
+  color: var(--ink);
+  display: block;
+}
+
+#legal-root h3 {
+  font-size: 1.05rem;
+  margin: 22px 0 10px;
+  color: var(--ink);
+}
+
+#legal-root h4 {
+  font-size: 0.95rem;
+  margin: 18px 0 8px;
+  color: var(--ink);
+}
+
+#legal-root p {
+  margin: 0 0 12px;
+}
+
+#legal-root strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+#legal-root a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+#legal-root a:hover {
+  text-decoration: underline;
+}
+
+#legal-root code {
+  background: var(--hover-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88em;
+}
+
+#legal-root table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.88rem;
+}
+
+#legal-root td,
+#legal-root th {
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+#legal-root td:first-child {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+#legal-root ul,
+#legal-root ol {
+  margin: 0 0 12px;
+  padding-left: 24px;
+}
+
+#legal-root li {
+  margin-bottom: 4px;
+}
+
+#legal-root > h1:first-child {
+  margin-top: 0;
+}

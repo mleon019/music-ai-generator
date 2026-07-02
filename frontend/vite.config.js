@@ -4,6 +4,14 @@ import { fileURLToPath } from "url";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
+const LEGAL_ROUTES = [
+  "aviso-legal",
+  "politica-privacidad",
+  "politica-cookies",
+  "terminos-uso",
+  "informacion-ia",
+];
+
 const routeEntries = {
   "/": "/pages/index.html",
   "/form/": "/pages/form/index.html",
@@ -12,8 +20,12 @@ const routeEntries = {
   "/register/": "/pages/register/index.html",
   "/history/": "/pages/history/index.html",
   "/profile/": "/pages/profile/index.html",
-  "/reset-password/": "/pages/reset-password/index.html"
+  "/reset-password/": "/pages/reset-password/index.html",
 };
+
+for (const slug of LEGAL_ROUTES) {
+  routeEntries[`/legal/${slug}/`] = "/pages/legal/index.html";
+}
 
 const legacyRedirects = {
   "/index.html": "/",
@@ -25,6 +37,9 @@ const legacyRedirects = {
   "/profile.html": "/profile/",
   "/reset-password.html": "/reset-password/"
 };
+
+// NOT adding redirects for /legaldocs/*.md — legal.js fetches them
+// at runtime and would be caught in a redirect loop to the HTML page.
 
 function cleanUrlMiddleware(req, res, next) {
   if (!req.url) {
@@ -95,7 +110,8 @@ export default defineConfig({
         register: resolve(__dirname, "pages/register/index.html"),
         history: resolve(__dirname, "pages/history/index.html"),
         profile: resolve(__dirname, "pages/profile/index.html"),
-        "reset-password": resolve(__dirname, "pages/reset-password/index.html")
+        "reset-password": resolve(__dirname, "pages/reset-password/index.html"),
+        legal: resolve(__dirname, "pages/legal/index.html")
       }
     }
   }
