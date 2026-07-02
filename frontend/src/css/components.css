@@ -166,11 +166,6 @@ a.button.primary:visited {
   height: 18px;
 }
 
-.brand {
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
 .link {
   font-weight: 600;
   color: var(--muted);
@@ -515,13 +510,6 @@ button:disabled {
 .score-canvas {
   min-height: 200px;
   color: var(--muted);
-}
-
-.hero-links {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-top: 16px;
 }
 
 .auth-panel {

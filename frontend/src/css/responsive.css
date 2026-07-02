@@ -9,6 +9,18 @@
     align-items: flex-start;
   }
 
+  .topbar-actions {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .topbar-actions-right {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
   .form-actions {
     justify-content: stretch;
   }

@@ -24,18 +24,25 @@
 .topbar {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 28px 20px 0;
+  padding: 20px 20px 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  gap: 24px;
 }
 
 .topbar-actions {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 16px;
-  color: var(--muted);
+  justify-content: center;
+}
+
+.topbar-actions-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .page-shell {
