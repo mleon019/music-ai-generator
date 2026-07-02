@@ -60,11 +60,6 @@ if (forgotButton && modal) {
   });
 }
 
-const closeModal = () => {
-  modal.hidden = true;
-  if (forgotStatus) forgotStatus.dataset.state = "idle";
-};
-
 if (modal) {
   const modalClose = document.querySelector("[data-modal-close]");
   const modalCancel = document.querySelector("[data-modal-cancel]");

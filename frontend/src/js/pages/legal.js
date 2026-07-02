@@ -1,5 +1,4 @@
 import "../main";
-import { createIcons, icons } from "lucide";
 import { escapeHtml } from "../utils/html";
 
 const DOCUMENT_MAP = {
