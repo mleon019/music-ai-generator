@@ -1,17 +1,16 @@
-import { deleteAllScores, deleteScore, exportScore, fetchScores, getAuthUser, updateScoreTitle } from "./api";
-import { renderAuthNavigation } from "./utils/authNav";
-import { setCurrentScoreState } from "./utils/scoreState";
-import { downloadBlob } from "./utils/downloadFile";
+import "../main";
+import { deleteAllScores, deleteScore, exportScore, fetchScores, updateScoreTitle } from "../api/scores";
+import { getAuthUser } from "../api/client";
+import { setCurrentScoreState } from "../utils/scoreState";
+import { downloadBlob } from "../utils/downloadFile";
 import { createIcons, icons } from "lucide";
 import { OpenSheetMusicDisplay } from "opensheetmusicdisplay";
-import { createSetStatus } from "./utils/status";
-import { escapeHtml } from "./utils/html";
-import { onClickOutside } from "./utils/clickOutside";
-import { createModal } from "./utils/modal";
-import { svgToPngBase64, extractBase64 } from "./utils/image";
-
-document.documentElement.classList.add("js-ready");
-renderAuthNavigation();
+import { createSetStatus } from "../utils/status";
+import { escapeHtml } from "../utils/html";
+import { onClickOutside } from "../utils/clickOutside";
+import { createModal } from "../utils/modal";
+import { bindModalClose } from "../utils/modalClose";
+import { svgToPngBase64, extractBase64 } from "../utils/image";
 
 const list = document.querySelector("[data-history-list]");
 const status = document.querySelector("[data-status]");
@@ -42,21 +41,10 @@ if (deleteAllButton && deleteModal) {
   createModal(deleteModal);
 }
 
-if (deleteCancel && deleteModal) {
-  deleteCancel.addEventListener("click", () => {
-    deleteModal.hidden = true;
-  });
-}
+bindModalClose(deleteModal, [deleteCancel, document.querySelector("[data-delete-close]")].filter(Boolean));
 
 if (deleteConfirm) {
   deleteConfirm.addEventListener("click", handleDeleteAllScores);
-}
-
-const deleteClose = document.querySelector("[data-delete-close]");
-if (deleteClose && deleteModal) {
-  deleteClose.addEventListener("click", () => {
-    deleteModal.hidden = true;
-  });
 }
 
 
@@ -292,7 +280,7 @@ list?.addEventListener("click", async (event) => {
   }
 
   if (action === "edit-title") {
-    startInlineEdit(scoreItem, score, scoreIndex);
+    startInlineEdit(scoreItem, score);
     return;
   }
 
@@ -338,5 +326,3 @@ async function renderPdfOffscreen(musicxml) {
     document.body.removeChild(container);
   }
 }
-
-

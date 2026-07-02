@@ -1,13 +1,11 @@
-import { loginUser, setAuthUser, requestPasswordReset, getAuthUser } from "./api";
-import { renderAuthNavigation } from "./utils/authNav";
-import { validateEmail, validatePassword } from "./utils/validation";
+import "../main";
+import { loginUser, requestPasswordReset } from "../api/auth";
+import { setAuthUser, getAuthUser } from "../api/client";
+import { validateEmail, validatePassword } from "../utils/validation";
 import { createIcons, icons } from "lucide";
-import { createSetStatus } from "./utils/status";
-import { createModal } from "./utils/modal";
-
-document.documentElement.classList.add("js-ready");
-
-renderAuthNavigation();
+import { createSetStatus } from "../utils/status";
+import { createModal } from "../utils/modal";
+import { bindModalClose } from "../utils/modalClose";
 
 const form = document.querySelector("[data-auth-form]");
 const status = document.querySelector("[data-status]");
@@ -17,8 +15,6 @@ const forgotButton = document.querySelector("[data-forgot-password]");
 const forgotForm = document.querySelector("[data-forgot-form]");
 const forgotEmail = document.querySelector("[data-forgot-email]");
 const forgotStatus = document.querySelector("[data-forgot-status]");
-const modalClose = document.querySelector("[data-modal-close]");
-const modalCancel = document.querySelector("[data-modal-cancel]");
 
 if (form) {
   form.addEventListener("submit", async (event) => {
@@ -69,12 +65,10 @@ const closeModal = () => {
   if (forgotStatus) forgotStatus.dataset.state = "idle";
 };
 
-if (modalClose && modal) {
-  modalClose.addEventListener("click", closeModal);
-}
-
-if (modalCancel && modal) {
-  modalCancel.addEventListener("click", closeModal);
+if (modal) {
+  const modalClose = document.querySelector("[data-modal-close]");
+  const modalCancel = document.querySelector("[data-modal-cancel]");
+  bindModalClose(modal, [modalClose, modalCancel].filter(Boolean));
 }
 
 if (forgotForm) {

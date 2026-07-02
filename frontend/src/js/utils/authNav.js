@@ -1,4 +1,4 @@
-import { getAuthUser, logout } from "../api";
+import { getAuthUser, logout } from "../api/client";
 import { escapeHtml } from "./html";
 import { createIcons, icons } from "lucide";
 

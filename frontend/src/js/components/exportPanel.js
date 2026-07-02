@@ -1,4 +1,4 @@
-import { exportScore } from "../api";
+import { exportScore } from "../api/scores";
 import { downloadBlob } from "../utils/downloadFile";
 import { extractBase64 } from "../utils/image";
 

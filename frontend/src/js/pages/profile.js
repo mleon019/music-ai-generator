@@ -1,14 +1,13 @@
-import { deleteAccount, getAuthUser, logout, requestPasswordReset, setAuthUser, updateProfile } from "./api";
-import { renderAuthNavigation } from "./utils/authNav";
-import { validatePassword } from "./utils/validation";
+import "../main";
+import { renderAuthNavigation } from "../utils/authNav";
+import { deleteAccount, requestPasswordReset, updateProfile } from "../api/auth";
+import { getAuthUser, logout, setAuthUser } from "../api/client";
+import { validatePassword } from "../utils/validation";
 import { createIcons, icons } from "lucide";
-import { createSetStatus } from "./utils/status";
-import { onClickOutside } from "./utils/clickOutside";
-import { createModal } from "./utils/modal";
-
-document.documentElement.classList.add("js-ready");
-
-renderAuthNavigation();
+import { createSetStatus } from "../utils/status";
+import { onClickOutside } from "../utils/clickOutside";
+import { createModal } from "../utils/modal";
+import { bindModalClose } from "../utils/modalClose";
 
 let authUser = getAuthUser();
 
@@ -42,16 +41,12 @@ const logoutBtn = document.querySelector("[data-logout]");
 // Modals
 const deleteModal = document.querySelector("[data-delete-modal]");
 const deleteConfirm = document.querySelector("[data-delete-confirm]");
-const deleteCancel = document.querySelector("[data-delete-cancel]");
-const deleteClose = document.querySelector("[data-delete-close]");
 const deletePassword = document.querySelector("[data-delete-password]");
 const deleteStatus = document.querySelector("[data-delete-status]");
 const forgotModal = document.querySelector("[data-forgot-modal]");
 const forgotForm = document.querySelector("[data-forgot-form]");
 const forgotEmailDisplay = document.querySelector("[data-forgot-email-display]");
 const forgotStatus = document.querySelector("[data-forgot-status]");
-const forgotCancel = document.querySelector("[data-forgot-cancel]");
-const forgotClose = document.querySelector("[data-forgot-close]");
 
 function renderUserData() {
   if (!authUser) return;
@@ -238,12 +233,10 @@ if (deleteButton && deleteModal) {
   createModal(deleteModal, { onClose: resetDeleteModal });
 }
 
-if (deleteCancel && deleteModal) {
-  deleteCancel.addEventListener("click", () => {
-    deleteModal.hidden = true;
-    resetDeleteModal();
-  });
-}
+bindModalClose(deleteModal, [
+  document.querySelector("[data-delete-cancel]"),
+  document.querySelector("[data-delete-close]"),
+].filter(Boolean));
 
 if (deleteConfirm) {
   deleteConfirm.addEventListener("click", async () => {
@@ -269,21 +262,12 @@ if (deleteConfirm) {
   });
 }
 
-if (deleteClose && deleteModal) {
-  deleteClose.addEventListener("click", () => {
-    deleteModal.hidden = true;
-    resetDeleteModal();
-  });
-}
-
 // ── Modal: Forgot password ──
 
-if (forgotCancel && forgotModal) {
-  forgotCancel.addEventListener("click", () => {
-    forgotModal.hidden = true;
-    resetForgotModal();
-  });
-}
+bindModalClose(forgotModal, [
+  document.querySelector("[data-forgot-cancel]"),
+  document.querySelector("[data-forgot-close]"),
+].filter(Boolean));
 
 if (forgotForm) {
   forgotForm.addEventListener("submit", async (event) => {
@@ -315,13 +299,6 @@ if (forgotForm) {
         forgotStatus.dataset.state = "visible";
       }
     }
-  });
-}
-
-if (forgotClose && forgotModal) {
-  forgotClose.addEventListener("click", () => {
-    forgotModal.hidden = true;
-    if (forgotStatus) forgotStatus.dataset.state = "idle";
   });
 }
 

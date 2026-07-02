@@ -1,10 +1,6 @@
+import "../main";
+import { getAuthUser } from "../api/client";
 import { createIcons, icons } from "lucide";
-import { renderAuthNavigation } from "./utils/authNav";
-import { getAuthUser } from "./api";
-
-document.documentElement.classList.add("js-ready");
-
-renderAuthNavigation();
 
 const user = getAuthUser();
 

@@ -1,9 +1,6 @@
-import { renderAuthNavigation } from "./utils/authNav";
+import "../main";
 import { createIcons, icons } from "lucide";
-
-document.documentElement.classList.add("js-ready");
-renderAuthNavigation();
-createIcons({ icons });
+import { escapeHtml } from "../utils/html";
 
 const DOCUMENT_MAP = {
   "aviso-legal": { file: "aviso-legal.md", title: "Aviso Legal" },
@@ -38,10 +35,6 @@ if (!doc) {
     });
 }
 
-function esc(text) {
-  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-
 function mdToHtml(text) {
   const lines = text.split("\n");
   const out = [];
@@ -56,17 +49,17 @@ function mdToHtml(text) {
     if (/^\|[-| :]+\|$/.test(trim)) { i++; continue; }
 
     if (trim.startsWith("|") && trim.endsWith("|")) {
-      const cells = trim.slice(1, -1).split("|").map((c) => esc(c.trim()));
+      const cells = trim.slice(1, -1).split("|").map((c) => escapeHtml(c.trim()));
       out.push("<tr><td>" + cells.join("</td><td>") + "</td></tr>");
       i++;
       continue;
     }
 
     if (trim.startsWith("- ")) {
-      const items = [esc(trim.slice(2))];
+      const items = [escapeHtml(trim.slice(2))];
       i++;
       while (i < lines.length && lines[i].trim().startsWith("- ")) {
-        items.push(esc(lines[i].trim().slice(2)));
+        items.push(escapeHtml(lines[i].trim().slice(2)));
         i++;
       }
       out.push("<li>" + items.join("</li><li>") + "</li>");
@@ -74,24 +67,24 @@ function mdToHtml(text) {
     }
 
     if (/^\d+\.\s/.test(trim)) {
-      const items = [esc(trim.replace(/^\d+\.\s/, ""))];
+      const items = [escapeHtml(trim.replace(/^\d+\.\s/, ""))];
       i++;
       while (i < lines.length && /^\d+\.\s/.test(lines[i].trim())) {
-        items.push(esc(lines[i].trim().replace(/^\d+\.\s/, "")));
+        items.push(escapeHtml(lines[i].trim().replace(/^\d+\.\s/, "")));
         i++;
       }
       out.push("<li>" + items.join("</li><li>") + "</li>");
       continue;
     }
 
-    if (trim.startsWith("###### ")) { out.push("<h6>" + esc(trim.slice(7)) + "</h6>"); i++; continue; }
-    if (trim.startsWith("##### ")) { out.push("<h5>" + esc(trim.slice(6)) + "</h5>"); i++; continue; }
-    if (trim.startsWith("#### ")) { out.push("<h4>" + esc(trim.slice(5)) + "</h4>"); i++; continue; }
-    if (trim.startsWith("### ")) { out.push("<h3>" + esc(trim.slice(4)) + "</h3>"); i++; continue; }
-    if (trim.startsWith("## ")) { out.push("<h2>" + esc(trim.slice(3)) + "</h2>"); i++; continue; }
-    if (trim.startsWith("# ")) { out.push("<h1>" + esc(trim.slice(2)) + "</h1>"); i++; continue; }
+    if (trim.startsWith("###### ")) { out.push("<h6>" + escapeHtml(trim.slice(7)) + "</h6>"); i++; continue; }
+    if (trim.startsWith("##### ")) { out.push("<h5>" + escapeHtml(trim.slice(6)) + "</h5>"); i++; continue; }
+    if (trim.startsWith("#### ")) { out.push("<h4>" + escapeHtml(trim.slice(5)) + "</h4>"); i++; continue; }
+    if (trim.startsWith("### ")) { out.push("<h3>" + escapeHtml(trim.slice(4)) + "</h3>"); i++; continue; }
+    if (trim.startsWith("## ")) { out.push("<h2>" + escapeHtml(trim.slice(3)) + "</h2>"); i++; continue; }
+    if (trim.startsWith("# ")) { out.push("<h1>" + escapeHtml(trim.slice(2)) + "</h1>"); i++; continue; }
 
-    out.push("<p>" + esc(trim) + "</p>");
+    out.push("<p>" + escapeHtml(trim) + "</p>");
     i++;
   }
 

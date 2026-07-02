@@ -1,11 +1,8 @@
-import { generateScore } from "./api";
-import { renderAuthNavigation } from "./utils/authNav";
-import { createConfigForm } from "./components/formComponent";
-import { setCurrentScoreState } from "./utils/scoreState";
-import { createSetStatus } from "./utils/status";
-
-document.documentElement.classList.add("js-ready");
-renderAuthNavigation();
+import "../main";
+import { generateScore } from "../api/scores";
+import { createConfigForm } from "../components/formComponent";
+import { setCurrentScoreState } from "../utils/scoreState";
+import { createSetStatus } from "../utils/status";
 
 const formRoot = document.getElementById("form-root");
 const status = document.getElementById("status-message");

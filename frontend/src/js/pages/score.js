@@ -1,13 +1,10 @@
-import { createScoreViewer } from "./components/scoreViewer";
-import { createExportPanel } from "./components/exportPanel";
+import "../main";
+import { createScoreViewer } from "../components/scoreViewer";
+import { createExportPanel } from "../components/exportPanel";
 import { createIcons, icons } from "lucide";
-import { regenerateScore } from "./api";
-import { renderAuthNavigation } from "./utils/authNav";
-import { getCurrentScoreState, setCurrentScoreState } from "./utils/scoreState";
-import { createSetStatus } from "./utils/status";
-
-document.documentElement.classList.add("js-ready");
-renderAuthNavigation();
+import { regenerateScore } from "../api/scores";
+import { getCurrentScoreState, setCurrentScoreState } from "../utils/scoreState";
+import { createSetStatus } from "../utils/status";
 
 const scoreRoot = document.getElementById("score-root");
 const exportRoot = document.getElementById("export-root");
@@ -104,5 +101,3 @@ async function handleRegenerate() {
     }
   }
 }
-
-

@@ -1,11 +1,8 @@
-import { resetPassword, clearAuthUser, clearAuthToken } from "./api";
-import { renderAuthNavigation } from "./utils/authNav";
-import { validatePassword } from "./utils/validation";
-import { createSetStatus } from "./utils/status";
-
-document.documentElement.classList.add("js-ready");
-
-renderAuthNavigation();
+import "../main";
+import { resetPassword } from "../api/auth";
+import { clearAuthUser, clearAuthToken } from "../api/client";
+import { validatePassword } from "../utils/validation";
+import { createSetStatus } from "../utils/status";
 
 const params = new URLSearchParams(window.location.search);
 const token = params.get("token");
