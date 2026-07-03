@@ -1,3 +1,4 @@
+.card,
 .panel {
   background: var(--card);
   border: 1px solid var(--border);
@@ -268,12 +269,27 @@ input {
   gap: 6px;
 }
 
-.confirm-text {
-  margin: 0 0 12px;
-  font-size: 0.9rem;
+.checkbox-field {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.85rem;
   color: var(--muted);
+  cursor: pointer;
 }
 
-.confirm-input {
-  margin-bottom: 12px;
+.checkbox-field input[type="checkbox"] {
+  width: auto;
+  margin-top: 3px;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+}
+
+.checkbox-field a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.checkbox-field a:hover {
+  text-decoration: underline;
 }

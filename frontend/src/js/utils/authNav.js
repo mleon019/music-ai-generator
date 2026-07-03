@@ -57,7 +57,7 @@ function highlightActiveLink() {
 function injectBrandIcon() {
   document.querySelectorAll(".brand").forEach((el) => {
     if (el.querySelector(".brand-icon")) return;
-    el.insertAdjacentHTML("afterbegin", '<i data-lucide="music-2" class="brand-icon" style="width:20px;height:20px;flex-shrink:0"></i>');
+    el.insertAdjacentHTML("afterbegin", '<i data-lucide="music-2" class="brand-icon"></i>');
   });
 }
 

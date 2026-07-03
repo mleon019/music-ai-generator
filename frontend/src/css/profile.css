@@ -1,7 +1,7 @@
 .profile-card-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-md);
   margin-bottom: 0;
 }
 
@@ -13,7 +13,7 @@
 
 .profile-name-heading {
   font-family: "Space Grotesk", sans-serif;
-  font-size: 1.3rem;
+  font-size: var(--text-xl);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
@@ -34,20 +34,20 @@
 .profile-divider {
   border: none;
   border-top: 1px solid var(--border);
-  margin: 16px 0;
+  margin: var(--space-lg) 0;
 }
 
 .profile-field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
 }
 
 .profile-value-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .profile-name-input {
@@ -77,7 +77,7 @@
 
 .danger-header-title {
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: var(--text-md);
   color: #9a1f2b;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -87,19 +87,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-lg);
 }
 
 .danger-action-title {
   margin: 0;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: var(--text-md);
   color: var(--ink);
 }
 
 .danger-desc {
-  margin: 4px 0 0;
-  font-size: 0.82rem;
+  margin: var(--space-xs) 0 0;
+  font-size: var(--text-sm);
   color: var(--muted);
 }
 

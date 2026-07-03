@@ -28,6 +28,12 @@ if (form) {
     const passwordError = validatePassword(password);
     if (passwordError) { setStatus(passwordError); return; }
 
+    const acceptTerms = form.querySelector("[name='accept-terms']");
+    if (!acceptTerms.checked) {
+      setStatus("Acepta la Política de Privacidad y los Términos de Uso para continuar.");
+      return;
+    }
+
     try {
       setStatus("Creando cuenta...");
       const result = await registerUser(payload);

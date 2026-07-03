@@ -11,7 +11,7 @@
 #legal-root {
   max-width: 800px;
   line-height: 1.7;
-  font-size: 0.95rem;
+  font-size: var(--text-md);
   color: var(--ink);
   justify-self: center;
 }
@@ -19,27 +19,27 @@
 #legal-root h1 {
   font-family: "Space Grotesk", sans-serif;
   font-size: 1.8rem;
-  margin: 0 0 24px;
+  margin: 0 0 var(--space-xl);
   letter-spacing: -0.02em;
   display: block;
 }
 
 #legal-root h2 {
   font-size: 1.2rem;
-  margin: 32px 0 12px;
+  margin: var(--space-2xl) 0 var(--space-md);
   color: var(--ink);
   display: block;
 }
 
 #legal-root h3 {
-  font-size: 1.05rem;
+  font-size: var(--text-lg);
   margin: 22px 0 10px;
   color: var(--ink);
 }
 
 #legal-root h4 {
-  font-size: 0.95rem;
-  margin: 18px 0 8px;
+  font-size: var(--text-md);
+  margin: 18px 0 var(--space-sm);
   color: var(--ink);
 }
 
