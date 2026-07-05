@@ -48,7 +48,7 @@ async function generateMusicXml({ model, config: promptConfig }) {
   };
 
   try {
-    const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
+    const response = await fetch(config.groq.baseUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

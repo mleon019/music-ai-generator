@@ -27,6 +27,7 @@ const config = {
   databaseUrl: requireEnv("DATABASE_URL"),
   databaseSsl: process.env.DB_SSL === "true",
   groq: {
+    baseUrl: requireEnv("BASE_URL"),
     apiKey: requireEnv("GROQ_API_KEY"),
     models: groqModels,
     temperature: Number.parseFloat(process.env.GROQ_TEMPERATURE || "0.2"),
