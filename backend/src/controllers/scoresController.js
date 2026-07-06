@@ -29,8 +29,10 @@ async function regenerateScore(req, res, next) {
 
 async function listScores(req, res, next) {
     try {
-        const scores = await scoreMgmt.getUserScores(req.user.id);
-        return res.status(200).json({ scores });
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const result = await scoreMgmt.getUserScores(req.user.id, page, limit);
+        return res.status(200).json({ scores: result.scores, totalCount: result.totalCount });
     } catch (error) {
         return next(error);
     }

@@ -37,9 +37,6 @@ async function generateValidXml(promptConfig) {
         console.log(`Attempt ${attempt + 1}/${maxAttempts} using model ${model}`);
         try {
             const { xml } = await generateMusicXml({ model, config: promptConfig });
-            console.log("----------------------------------------------------");
-            console.log(xml);
-            console.log("----------------------------------------------------");
             const validation = validateMusicXml(xml);
 
             if (validation.valid) {
@@ -118,15 +115,23 @@ async function regenerateScore(promptConfig, scoreId, user) {
     return { musicxml: xml, id: scoreId };
 }
 
-async function getUserScores(userId) {
-    const scores = await scoreRepository.findAllByUser(userId);
-    return scores.map(score => ({
-        id: score.id,
-        title: score.title,
-        config: score.config,
-        musicxml: score.musicxml,
-        createdAt: score.created_at
-    }));
+async function getUserScores(userId, page = 1, limit = 10) {
+    const offset = (page - 1) * limit;
+    const [scores, totalCount] = await Promise.all([
+        scoreRepository.findAllByUser(userId, limit, offset),
+        scoreRepository.countByUser(userId)
+    ]);
+
+    return {
+        scores: scores.map(score => ({
+            id: score.id,
+            title: score.title,
+            config: score.config,
+            musicxml: score.musicxml,
+            createdAt: score.created_at
+        })),
+        totalCount
+    };
 }
 
 async function updateScoreTitle(scoreId, userId, title) {

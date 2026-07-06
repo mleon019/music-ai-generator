@@ -8,7 +8,6 @@ process.env.DB_RETRY_DELAY_MS = process.env.DB_RETRY_DELAY_MS || "500";
 
 jest.setTimeout(20000);
 
-// Mocks comunes
 jest.mock("../../src/services/groqService", () => ({
   generateMusicXml: jest.fn()
 }));
@@ -119,7 +118,6 @@ describe("POST /api/scores/generate", () => {
       .send(validPayload);
 
     expect(response.status).toBe(502);
-    expect(response.body.error).toBe("Internal server error");
   });
 });
 

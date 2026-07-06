@@ -23,6 +23,13 @@ const historyTitle = document.querySelector("[data-history-title]");
 const historyCount = document.querySelector("[data-history-count]");
 let renderedScores = [];
 
+const PAGE_SIZE = 10;
+let currentPage = 1;
+let loadedPages = [];
+let hasMore = true;
+let isLoadingMore = false;
+let totalCount = 0;
+
 const authUser = getAuthUser();
 if (historyTitle && authUser?.name) {
   historyTitle.textContent = `Historial de ${authUser.name}`;
@@ -32,7 +39,13 @@ if (deleteAllButton) {
   deleteAllButton.hidden = true;
 }
 
-loadScores();
+const loadMoreWrapper = document.createElement("div");
+loadMoreWrapper.style.textAlign = "center";
+loadMoreWrapper.hidden = true;
+loadMoreWrapper.innerHTML = `<button class="forgot-link" type="button" data-load-more style="color:#fff">Cargar m&aacute;s</button>`;
+list?.after(loadMoreWrapper);
+
+loadScores(1);
 
 if (deleteAllButton && deleteModal) {
   deleteAllButton.addEventListener("click", () => {
@@ -94,7 +107,7 @@ function startInlineEdit(scoreItem, score) {
     try {
       setStatus("Actualizando el título...");
       await updateScoreTitle(score.id, newTitle);
-      await loadScores();
+      await loadScores(1);
     } catch (error) {
       setStatus(error?.message || "No se pudo cambiar el título de esta partitura. Inténtalo de nuevo más tarde.");
       restoreOriginal();
@@ -184,13 +197,13 @@ async function handleDeleteAllScores() {
   try {
     setStatus("Eliminando todas las partituras...");
     await deleteAllScores();
-    await loadScores();
+    await loadScores(1);
   } catch (error) {
     setStatus(error?.message || "No se pudo eliminar las partituras. Inténtalo de nuevo más tarde.");
   }
 }
 
-async function loadScores() {
+async function loadScores(page) {
   if (!list) return;
 
   if (!authUser) {
@@ -198,40 +211,117 @@ async function loadScores() {
     list.innerHTML = "<p class=\"empty-state\">Inicia sesión para ver tu historial.</p>";
     setStatus("");
     updateCount(0);
+    updateLoadMoreButton();
     createIcons({ icons });
     return;
   }
 
   try {
-    setStatus("Cargando tus partituras...");
-    const result = await fetchScores();
-    const scores = result?.scores || [];
-    renderedScores = scores;
-    updateCount(scores.length);
-
-    if (scores.length === 0) {
-      if (deleteAllButton) deleteAllButton.hidden = true;
-      list.innerHTML = `
-        <div class="empty-panel">
-          <i data-lucide="music-2" class="empty-icon"></i>
-          <p class="empty-title">Sin partituras guardadas</p>
-          <p class="empty-subtitle">Tus partituras generadas aparecerán aquí</p>
-        </div>
-      `;
-      setStatus("");
-      createIcons({ icons });
-      return;
+    const isFirstPage = page === 1;
+    if (isFirstPage) {
+      setStatus("Cargando tus partituras...");
+      loadedPages = [];
+      renderedScores = [];
+    } else {
+      isLoadingMore = true;
     }
 
-    list.innerHTML = scores.map((score, index) => renderScore(score, index)).join("");
-    if (deleteAllButton) deleteAllButton.hidden = false;
+    const result = await fetchScores(page, PAGE_SIZE);
+    const scores = result?.scores || [];
+    totalCount = result?.totalCount || 0;
+    hasMore = page * PAGE_SIZE < totalCount;
+
+    if (isFirstPage) {
+      updateCount(totalCount);
+
+      if (scores.length === 0) {
+        showEmptyState();
+        return;
+      }
+
+      list.innerHTML = scores.map((score, index) => renderScore(score, index)).join("");
+      if (deleteAllButton) deleteAllButton.hidden = false;
+      renderedScores = scores;
+    } else {
+      const startIdx = renderedScores.length;
+      list.insertAdjacentHTML(
+        "beforeend",
+        scores.map((score, i) => renderScore(score, startIdx + i)).join("")
+      );
+      renderedScores.push(...scores);
+    }
+
+    loadedPages.push(page);
+    updateLoadMoreButton();
     setStatus("");
     createIcons({ icons });
   } catch (error) {
     if (error?.status !== 401) {
       setStatus(error?.message || "No se pudo cargar las partituras. Inténtalo de nuevo más tarde.");
     }
+  } finally {
+    isLoadingMore = false;
   }
+}
+
+async function reloadAllLoadedPages() {
+  if (!list) return;
+
+  renderedScores = [];
+  loadedPages = [];
+
+  for (let p = 1; p <= currentPage; p++) {
+    const result = await fetchScores(p, PAGE_SIZE);
+    const scores = result?.scores || [];
+    totalCount = result?.totalCount || 0;
+    hasMore = p * PAGE_SIZE < totalCount;
+
+    if (p === 1) {
+      if (scores.length === 0) {
+        showEmptyState();
+        return;
+      }
+      list.innerHTML = scores.map((score, i) => renderScore(score, i)).join("");
+    } else {
+      const startIdx = renderedScores.length;
+      list.insertAdjacentHTML(
+        "beforeend",
+        scores.map((score, i) => renderScore(score, startIdx + i)).join("")
+      );
+    }
+
+    renderedScores.push(...scores);
+    loadedPages.push(p);
+  }
+
+  if (deleteAllButton) deleteAllButton.hidden = false;
+  updateCount(totalCount);
+  updateLoadMoreButton();
+  setStatus("");
+  createIcons({ icons });
+}
+
+function showEmptyState() {
+  if (deleteAllButton) deleteAllButton.hidden = true;
+  renderedScores = [];
+  loadedPages = [];
+  hasMore = false;
+  list.innerHTML = `
+    <div class="empty-panel">
+      <i data-lucide="music-2" class="empty-icon"></i>
+      <p class="empty-title">Sin partituras guardadas</p>
+      <p class="empty-subtitle">Tus partituras generadas aparecerán aquí</p>
+    </div>
+  `;
+  updateCount(0);
+  updateLoadMoreButton();
+  setStatus("");
+  createIcons({ icons });
+}
+
+function updateLoadMoreButton() {
+  if (!loadMoreWrapper) return;
+  loadMoreWrapper.hidden = !hasMore || renderedScores.length === 0;
 }
 
 function updateCount(count) {
@@ -239,6 +329,14 @@ function updateCount(count) {
   historyCount.textContent = count === 1 ? "1 partitura guardada" : `${count} partituras guardadas`;
 }
 
+
+loadMoreWrapper.addEventListener("click", async (event) => {
+  const button = event.target.closest("[data-load-more]");
+  if (!button) return;
+  if (isLoadingMore || !hasMore) return;
+  currentPage++;
+  await loadScores(currentPage);
+});
 
 list?.addEventListener("click", async (event) => {
   const button = event.target.closest("[data-score-action]");
@@ -289,7 +387,7 @@ list?.addEventListener("click", async (event) => {
     try {
       setStatus("Eliminando partitura...");
       await deleteScore(scoreId);
-      await loadScores();
+      await reloadAllLoadedPages();
     } catch (error) {
       setStatus(error?.message || "No se pudo eliminar la partitura seleccionada. Inténtalo de nuevo más tarde.");
     }

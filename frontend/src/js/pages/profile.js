@@ -11,7 +11,7 @@ import { bindModalClose } from "../utils/modalClose";
 
 let authUser = getAuthUser();
 
-// Card 1 - Personal Info
+
 const profileNameDisplay = document.querySelector("[data-profile-name-display]");
 const profileNameText = document.querySelector("[data-profile-name-text]");
 const profileEmail = document.querySelector("[data-profile-email]");
@@ -22,7 +22,7 @@ const editNameBtn = document.querySelector("[data-edit-name]");
 const saveNameBtn = document.querySelector("[data-save-name]");
 const cancelNameBtn = document.querySelector("[data-cancel-name]");
 
-// Card 2 - Security
+
 const status = document.querySelector("[data-status]");
 const setStatus = createSetStatus(status);
 const togglePasswordBtn = document.querySelector("[data-toggle-password]");
@@ -34,11 +34,11 @@ const savePasswordBtn = document.querySelector("[data-save-password]");
 const cancelPasswordBtn = document.querySelector("[data-cancel-password]");
 const forgotLink = document.querySelector("[data-forgot-password]");
 
-// Card 3 - Danger Zone
+
 const deleteButton = document.querySelector("[data-delete-account]");
 const logoutBtn = document.querySelector("[data-logout]");
 
-// Modals
+
 const deleteModal = document.querySelector("[data-delete-modal]");
 const deleteConfirm = document.querySelector("[data-delete-confirm]");
 const deletePassword = document.querySelector("[data-delete-password]");
@@ -62,7 +62,6 @@ if (authUser) {
   setStatus("Por favor, inicia sesión primero para ver tu perfil.");
 }
 
-// ── Card 1: Inline name edit ──
 
 const cancelNameEdit = () => {
   if (nameDisplay) nameDisplay.hidden = false;
@@ -125,7 +124,6 @@ if (nameInput) {
   });
 }
 
-// ── Card 2: Password toggle ──
 
 if (togglePasswordBtn) {
   togglePasswordBtn.addEventListener("click", () => {
@@ -196,7 +194,6 @@ if (cancelPasswordBtn) {
   cancelPasswordBtn.addEventListener("click", resetPasswordEdit);
 }
 
-// ── Card 2: Forgot password link ──
 
 const resetForgotModal = () => {
   if (forgotStatus) forgotStatus.dataset.state = "idle";
@@ -212,13 +209,11 @@ if (forgotLink && forgotModal && forgotEmailDisplay) {
   createModal(forgotModal, { onClose: resetForgotModal });
 }
 
-// ── Card 3: Logout ──
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", logout);
 }
 
-// ── Modal: Delete account ──
 
 const resetDeleteModal = () => {
   if (deletePassword) deletePassword.value = "";
@@ -262,7 +257,6 @@ if (deleteConfirm) {
   });
 }
 
-// ── Modal: Forgot password ──
 
 bindModalClose(forgotModal, [
   document.querySelector("[data-forgot-cancel]"),

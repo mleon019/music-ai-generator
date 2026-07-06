@@ -35,16 +35,32 @@ async function updateScore(scoreId, userId, musicxml, config) {
     return result.rows[0];
 }
 
-async function findAllByUser(userId) {
+async function findAllByUser(userId, limit = null, offset = null) {
+    let query = `SELECT id, title, config, musicxml, created_at
+                 FROM scores
+                 WHERE user_id = $1
+                 ORDER BY created_at DESC`;
+    const params = [userId];
+
+    if (limit !== null) {
+        query += ` LIMIT $${params.length + 1}`;
+        params.push(limit);
+    }
+    if (offset !== null) {
+        query += ` OFFSET $${params.length + 1}`;
+        params.push(offset);
+    }
+
+    const result = await pool.query(query, params);
+    return result.rows;
+}
+
+async function countByUser(userId) {
     const result = await pool.query(
-        `SELECT id, title, config, musicxml, created_at
-         FROM scores
-         WHERE user_id = $1
-         ORDER BY created_at DESC`,
+        `SELECT COUNT(*)::int AS count FROM scores WHERE user_id = $1`,
         [userId]
     );
-
-    return result.rows;
+    return result.rows[0].count;
 }
 
 async function updateTitle(scoreId, userId, title) {
@@ -79,6 +95,7 @@ module.exports = {
     findByIdAndUser,
     updateScore,
     findAllByUser,
+    countByUser,
     updateTitle,
     deleteById,
     deleteAllByUser

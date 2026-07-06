@@ -38,9 +38,6 @@ const legacyRedirects = {
   "/reset-password.html": "/reset-password/"
 };
 
-// NOT adding redirects for /legaldocs/*.md — legal.js fetches them
-// at runtime and would be caught in a redirect loop to the HTML page.
-
 function cleanUrlMiddleware(req, res, next) {
   if (!req.url) {
     return next();

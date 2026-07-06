@@ -9,8 +9,8 @@ export function regenerateScore(config, id) {
   return request("/api/scores/regenerate", { method: "POST", body: JSON.stringify({ config, id }) });
 }
 
-export function fetchScores() {
-  return request("/api/scores");
+export function fetchScores(page = 1, limit = 10) {
+  return request(`/api/scores?page=${page}&limit=${limit}`);
 }
 
 export function updateScoreTitle(id, title) {
