@@ -119,8 +119,9 @@ function startInlineEdit(scoreItem, score) {
 
 
 function renderScore(score, index) {
-  const createdAt = score.created_at
-    ? new Date(score.created_at).toLocaleString()
+    const d = score.createdAt ? new Date(score.createdAt) : null;
+  const createdAt = d
+    ? `${d.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}, ${d.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}`
     : "";
   const config = score.config || {};
 
