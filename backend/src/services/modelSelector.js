@@ -1,8 +1,8 @@
 const config = require("../config");
 
 const MODEL_RANKINGS = {
-    "1-2": ["openai/gpt-oss-safeguard-20b", "llama-3.3-70b-versatile", "llama-3.1-8b-instant", "meta-llama/llama-4-scout-17b-16e-instruct", "groq/compound-mini"],
-    "3-5": ["openai/gpt-oss-120b", "llama-3.3-70b-versatile", "groq/compound", "openai/gpt-oss-20b"],
+    "1-2": ["openai/gpt-oss-safeguard-20b", "llama-3.1-8b-instant", "meta-llama/llama-4-scout-17b-16e-instruct", "groq/compound-mini"],
+    "3-5": ["openai/gpt-oss-120b", "groq/compound", "openai/gpt-oss-20b"],
     "6-12": ["groq/compound-mini", "meta-llama/llama-4-scout-17b-16e-instruct", "openai/gpt-oss-120b", "groq/compound"],
     "13-16": ["groq/compound", "openai/gpt-oss-safeguard-20b", "openai/gpt-oss-120b", "openai/gpt-oss-20b"]
 };
