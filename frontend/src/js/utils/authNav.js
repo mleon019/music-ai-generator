@@ -47,7 +47,7 @@ function highlightActiveLink() {
   document.querySelectorAll(".topbar-actions-links a").forEach((link) => {
     const href = link.getAttribute("href");
     if (!href) return;
-    const pageName = href.replace(/\.html$/, "");
+    const pageName = href.replace(/\/$/, "");
     if (currentPath.startsWith(pageName)) {
       link.classList.add("active");
     }
@@ -68,13 +68,13 @@ function renderLoggedNavigation(mode, user) {
 
   return `
     <div class="topbar-actions-links">
-      <a class="link" href="/form.html">Generar</a>
-      <a class="link" href="/history.html">Historial</a>
-      <a class="link" href="/profile.html">Perfil</a>
+      <a class="link" href="/form">Generar</a>
+      <a class="link" href="/history">Historial</a>
+      <a class="link" href="/profile">Perfil</a>
       ${renderLegalDropdown()}
     </div>
     <div class="topbar-actions-right">
-      <a class="link icon-link" href="/profile.html" aria-label="Mi perfil">
+      <a class="link icon-link" href="/profile" aria-label="Mi perfil">
         ${PROFILE_ICON}
         <span>${escapeHtml(user?.name || "Mi perfil")}</span>
       </a>
@@ -92,20 +92,20 @@ function renderGuestNavigation(mode) {
         ${renderLegalDropdown()}
       </div>
       <div class="topbar-actions-right">
-        <a class="link" href="/login.html">Iniciar sesión</a>
-        <a class="link" href="/register.html">Crear cuenta</a>
+        <a class="link" href="/login">Iniciar sesión</a>
+        <a class="link" href="/register">Crear cuenta</a>
       </div>
     `;
   }
 
   return `
     <div class="topbar-actions-links">
-      <a class="link" href="/form.html">Generar</a>
+      <a class="link" href="/form">Generar</a>
       ${renderLegalDropdown()}
     </div>
     <div class="topbar-actions-right">
-      <a class="link" href="/login.html">Iniciar sesión</a>
-      <a class="button primary" href="/register.html">Crear cuenta</a>
+      <a class="link" href="/login">Iniciar sesión</a>
+      <a class="button primary" href="/register">Crear cuenta</a>
     </div>
   `;
 }

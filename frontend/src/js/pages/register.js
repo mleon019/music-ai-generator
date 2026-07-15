@@ -38,7 +38,7 @@ if (form) {
       setStatus("Creando cuenta...");
       const result = await registerUser(payload);
       setAuthUser(result.user);
-      window.location.assign("/history.html");
+      window.location.assign("/history");
     } catch (error) {
       setStatus(error?.message || "No se pudo completar el registro. Inténtalo de nuevo más tarde.");
     }

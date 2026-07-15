@@ -36,7 +36,7 @@ if (form) {
       setStatus("Iniciando sesión...");
       const result = await loginUser(payload);
       setAuthUser(result.user);
-      window.location.assign("/history.html");
+      window.location.assign("/history");
     } catch (error) {
       setStatus(error?.message || "No se pudo iniciar sesión. Inténtalo de nuevo más tarde.");
     }

@@ -35,7 +35,7 @@ async function handleSubmit(config) {
       config,
       scoreId: result.id || null
     });
-    window.location.assign("/score.html");
+    window.location.assign("/score");
   } catch (error) {
     formControls.setError(error?.message || "No se pudo generar la partitura. Inténtalo de nuevo más tarde.");
     setStatus("");

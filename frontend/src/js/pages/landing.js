@@ -8,7 +8,7 @@ const ctaSecondary = document.getElementById("cta-secondary");
 if (ctaSecondary) {
   if (user) {
     ctaSecondary.textContent = "Ir al historial";
-    ctaSecondary.href = "/history.html";
+    ctaSecondary.href = "/history";
   }
 }
 

@@ -1,8 +1,8 @@
 const ROUTES = {
-  home: "/index.html",
+  home: "/",
   login: "/login/",
-  form: "/form.html",
-  score: "/score.html",
+  form: "/form",
+  score: "/score",
 };
 
 export function redirect(name) {

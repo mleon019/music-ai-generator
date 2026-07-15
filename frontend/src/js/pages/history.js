@@ -368,7 +368,7 @@ list?.addEventListener("click", async (event) => {
       scoreId: score.id || null
     });
 
-    window.location.assign("/score.html");
+    window.location.assign("/score");
     return;
   }
 
